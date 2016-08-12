@@ -12,6 +12,7 @@ var game_file_list = [
 	"bin-debug/AssetAdapter.js",
 	"bin-debug/LoadingUI.js",
 	"bin-debug/Main.js",
+	"bin-debug/Main_2.js",
 	"bin-debug/ThemeAdapter.js",
 	//----auto game_file_list end----
 ];
