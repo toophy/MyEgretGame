@@ -9,11 +9,19 @@ var game_file_list = [
 	"libs/modules/res/res.js",
 	"libs/modules/eui/eui.js",
 	"libs/modules/tween/tween.js",
-	"bin-debug/AssetAdapter.js",
-	"bin-debug/LoadingUI.js",
+	"bin-debug/common/GameEvents.js",
+	"bin-debug/container/arrays.js",
+	"bin-debug/container/Dictionary.js",
+	"bin-debug/container/util.js",
+	"bin-debug/euisys/AssetAdapter.js",
+	"bin-debug/euisys/AssetManager.js",
+	"bin-debug/euisys/ThemeAdapter.js",
 	"bin-debug/Main.js",
-	"bin-debug/Main_2.js",
-	"bin-debug/ThemeAdapter.js",
+	"bin-debug/part/UIManager.js",
+	"bin-debug/part/AbountUI.js",
+	"bin-debug/part/HomeUI.js",
+	"bin-debug/part/LoadingUI.js",
+	"bin-debug/part/MainNavicte.js",
 	//----auto game_file_list end----
 ];
 
