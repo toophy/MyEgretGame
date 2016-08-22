@@ -60,7 +60,7 @@ var UIManagerEx = (function (_super) {
         if (theDlg == undefined) {
             return false;
         }
-        if (this._main.contains(theDlg) == undefined) {
+        if (this._main.contains(theDlg) == false) {
             return false;
         }
         return true;

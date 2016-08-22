@@ -21,7 +21,7 @@ class UIManagerEx extends egret.EventDispatcher {
      * Create scene interface
      */
     protected startCreateScene(): void {
-        var mainNavbar = new MainNavicte();
+        let mainNavbar = new MainNavicte();
         mainNavbar.dialogName = "mainNavbar";
         this._main.addChild(mainNavbar);
     }
@@ -68,7 +68,7 @@ class UIManagerEx extends egret.EventDispatcher {
         if (theDlg == undefined) {
             return false;
         }
-        if (this._main.contains(theDlg) == undefined) {
+        if (this._main.contains(theDlg) == false) {
             return false;
         }
         return true;
@@ -78,7 +78,7 @@ class UIManagerEx extends egret.EventDispatcher {
 /**
  * 全局变量
  */
-var g_UIMgr: UIManagerEx = null;
+let g_UIMgr: UIManagerEx = null;
 
 /**
  * 封装窗口支持UI管理器
