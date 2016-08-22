@@ -19,6 +19,7 @@ var game_file_list = [
 	"bin-debug/Main.js",
 	"bin-debug/part/UIManager.js",
 	"bin-debug/part/AbountUI.js",
+	"bin-debug/part/ChatUI.js",
 	"bin-debug/part/HomeUI.js",
 	"bin-debug/part/LoadingUI.js",
 	"bin-debug/part/MainNavicte.js",

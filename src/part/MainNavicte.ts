@@ -5,10 +5,10 @@
  */
 class MainNavicte extends UIComponent {
 
-    private btnPlayer: eui.Button;
-    private btnHeros: eui.Button;
-    private btnItems: eui.Button;
-    private btnAbout: eui.Button;
+    private btnPlayer: eui.ToggleButton;
+    private btnHeros: eui.ToggleButton;
+    private btnItems: eui.ToggleButton;
+    private btnAbout: eui.ToggleButton;
 
 
     constructor() {
@@ -25,18 +25,30 @@ class MainNavicte extends UIComponent {
     }
 
     private onbtnPlayer(e: eui.UIEvent): void {
-        this.AutoShowDialog("PlayerDlg")
+        UIComponent.AutoShowDialog("PlayerDlg")
+        this.btnHeros.selected = false;
+        this.btnItems.selected = false;
+        this.btnAbout.selected = false;
     }
 
     private onbtnHeros(e: eui.UIEvent): void {
-        this.AutoShowDialog("HerosDlg")
+        UIComponent.AutoShowDialog("HerosDlg")
+        this.btnPlayer.selected = false;
+        this.btnItems.selected = false;
+        this.btnAbout.selected = false;
     }
 
     private onbtnItems(e: eui.UIEvent): void {
-        this.AutoShowDialog("GoodsDlg")
+        this.btnHeros.selected = false;
+        this.btnPlayer.selected = false;
+        this.btnAbout.selected = false;
+        UIComponent.AutoShowDialog("GoodsDlg")
     }
 
     private onbtnAbout(e: eui.UIEvent): void {
-        this.AutoShowDialog("AboutDlg")
+        this.btnHeros.selected = false;
+        this.btnItems.selected = false;
+        this.btnPlayer.selected = false;
+        UIComponent.AutoShowDialog("AboutDlg")
     }
 }

@@ -52,7 +52,11 @@ declare module skins{
 }
 declare class AboutSkin extends eui.Skin{
 }
+declare class ChatSkin extends eui.Skin{
+}
 declare class HomeUISkin extends eui.Skin{
+}
+declare class ListItem extends eui.Skin{
 }
 declare class NavbarSkin extends eui.Skin{
 }

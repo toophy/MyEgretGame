@@ -27,7 +27,6 @@ var UIManagerEx = (function (_super) {
         var theDlg;
         theDlg = this._dlgs.getValue(e.data.name);
         if (theDlg == undefined) {
-            console.log("hehe");
             switch (e.data.name) {
                 case "AboutDlg":
                     theDlg = new AboutDlg();
@@ -37,6 +36,7 @@ var UIManagerEx = (function (_super) {
                 case "HerosDlg":
                     break;
                 case "GoodsDlg":
+                    theDlg = new ChatDlg();
                     break;
             }
             theDlg.dialogName = e.data.name;
@@ -48,6 +48,34 @@ var UIManagerEx = (function (_super) {
             }
             else {
                 this._main.addChild(theDlg);
+                // 搞定各种互斥关系
+                switch (e.data.name) {
+                    case "AboutDlg":
+                        UIComponent.HideDialog("PlayerDlg");
+                        UIComponent.HideDialog("HerosDlg");
+                        UIComponent.HideDialog("GoodsDlg");
+                        break;
+                    case "PlayerDlg":
+                        UIComponent.HideDialog("AboutDlg");
+                        UIComponent.HideDialog("HerosDlg");
+                        UIComponent.HideDialog("GoodsDlg");
+                        break;
+                    case "HerosDlg":
+                        UIComponent.HideDialog("PlayerDlg");
+                        UIComponent.HideDialog("AboutDlg");
+                        UIComponent.HideDialog("GoodsDlg");
+                        break;
+                    case "GoodsDlg":
+                        UIComponent.HideDialog("PlayerDlg");
+                        UIComponent.HideDialog("HerosDlg");
+                        UIComponent.HideDialog("AboutDlg");
+                        break;
+                }
+            }
+            // 搞定联动
+            if (e.data.type == 0) {
+            }
+            else {
             }
         }
     };
@@ -90,25 +118,25 @@ var UIComponent = (function (_super) {
         }
     );
     p.Show = function () {
-        this.ShowDialog(this._dialogName);
+        UIComponent.ShowDialog(this._dialogName);
     };
     p.Hide = function () {
-        this.HideDialog(this._dialogName);
+        UIComponent.HideDialog(this._dialogName);
     };
-    p.ShowDialog = function (n) {
+    UIComponent.ShowDialog = function (n) {
         if (n != null && n.length > 0) {
             g_UIMgr.dispatchEvent(new egret.Event(GameEvents.Evt_ShowDialog, false, false, { name: n, type: 1 }));
         }
     };
-    p.HideDialog = function (n) {
+    UIComponent.HideDialog = function (n) {
         if (n != null && n.length > 0) {
             g_UIMgr.dispatchEvent(new egret.Event(GameEvents.Evt_ShowDialog, false, false, { name: n, type: 0 }));
         }
     };
     p.AutoShow = function () {
-        this.AutoShowDialog(this.dialogName);
+        UIComponent.AutoShowDialog(this.dialogName);
     };
-    p.AutoShowDialog = function (n) {
+    UIComponent.AutoShowDialog = function (n) {
         if (n != null && n.length > 0) {
             var show_type = 1;
             if (g_UIMgr.isShowDialog(n)) {
