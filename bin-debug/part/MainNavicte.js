@@ -18,37 +18,25 @@ var MainNavicte = (function (_super) {
     };
     p.onbtnPlayer = function (e) {
         UIComponent.AutoShowDialog("PlayerDlg");
-        this.btnHeros.enabled = !this.btnHeros.selected;
         this.btnHeros.selected = false;
-        this.btnItems.enabled = !this.btnItems.selected;
         this.btnItems.selected = false;
-        this.btnAbout.enabled = !this.btnAbout.selected;
         this.btnAbout.selected = false;
     };
     p.onbtnHeros = function (e) {
         UIComponent.AutoShowDialog("HerosDlg");
-        this.btnPlayer.enabled = !this.btnPlayer.selected;
         this.btnPlayer.selected = false;
-        this.btnItems.enabled = !this.btnItems.selected;
         this.btnItems.selected = false;
-        this.btnAbout.enabled = !this.btnAbout.selected;
         this.btnAbout.selected = false;
     };
     p.onbtnItems = function (e) {
-        UIComponent.AutoShowDialog("GoodsDlg");
-        this.btnHeros.enabled = !this.btnHeros.selected;
         this.btnHeros.selected = false;
-        this.btnPlayer.enabled = !this.btnPlayer.selected;
         this.btnPlayer.selected = false;
-        this.btnAbout.enabled = !this.btnAbout.selected;
         this.btnAbout.selected = false;
+        UIComponent.AutoShowDialog("GoodsDlg");
     };
     p.onbtnAbout = function (e) {
-        this.btnHeros.enabled = !this.btnHeros.selected;
         this.btnHeros.selected = false;
-        this.btnItems.enabled = !this.btnItems.selected;
         this.btnItems.selected = false;
-        this.btnPlayer.enabled = !this.btnPlayer.selected;
         this.btnPlayer.selected = false;
         UIComponent.AutoShowDialog("AboutDlg");
     };

@@ -20,5 +20,5 @@
 			</e:Array>
 		</e:ArrayCollection>
 	</e:List>
-	<e:EditableText id="editChat" width="390" height="96" text="" x="43" y="83"/>
+	<e:EditableText id="editChat" width="390" height="96" text="" x="43" y="83" backgroundColor="0x89e0f8" multiline="true"/>
 </e:Skin>

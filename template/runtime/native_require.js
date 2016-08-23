@@ -22,6 +22,7 @@ var game_file_list = [
 	"bin-debug/part/ChatUI.js",
 	"bin-debug/part/HomeUI.js",
 	"bin-debug/part/LoadingUI.js",
+	"bin-debug/part/LoginUI.js",
 	"bin-debug/part/MainNavicte.js",
 	//----auto game_file_list end----
 ];

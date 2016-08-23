@@ -32,6 +32,7 @@ var UIManagerEx = (function (_super) {
                     theDlg = new AboutDlg();
                     break;
                 case "PlayerDlg":
+                    theDlg = new LoginUI();
                     break;
                 case "HerosDlg":
                     break;

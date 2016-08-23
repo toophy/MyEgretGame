@@ -39,6 +39,7 @@ class UIManagerEx extends egret.EventDispatcher {
                     theDlg = new AboutDlg();
                     break;
                 case "PlayerDlg":
+                    theDlg = new LoginUI();
                     break;
                 case "HerosDlg":
                     break;

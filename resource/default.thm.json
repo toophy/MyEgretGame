@@ -33,6 +33,7 @@
     "resource/custom_skins/ChatSkin.exml",
     "resource/custom_skins/HomeUISkin.exml",
     "resource/custom_skins/ListItem.exml",
+    "resource/custom_skins/LoginSkin.exml",
     "resource/custom_skins/NavbarSkin.exml",
     "resource/eui_skins/ButtonSkin.exml",
     "resource/eui_skins/CheckBoxSkin.exml",
