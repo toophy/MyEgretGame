@@ -16,6 +16,7 @@ var game_file_list = [
 	"bin-debug/euisys/AssetAdapter.js",
 	"bin-debug/euisys/AssetManager.js",
 	"bin-debug/euisys/ThemeAdapter.js",
+	"bin-debug/game/ShowTest.js",
 	"bin-debug/Main.js",
 	"bin-debug/part/UIManager.js",
 	"bin-debug/part/AbountUI.js",

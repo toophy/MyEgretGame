@@ -9,6 +9,6 @@ var LoginUI = (function (_super) {
         _super.prototype.childrenCreated.call(this);
     };
     return LoginUI;
-}(eui.Component));
+}(UIComponent));
 egret.registerClass(LoginUI,'LoginUI');
 //# sourceMappingURL=LoginUI.js.map

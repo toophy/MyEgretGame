@@ -100,6 +100,12 @@ var AssetManagerEx = (function () {
             this._mainCF();
         }
     };
+    AssetManagerEx.createBitmapByName = function (name) {
+        var result = new egret.Bitmap();
+        var texture = RES.getRes(name);
+        result.texture = texture;
+        return result;
+    };
     return AssetManagerEx;
 }());
 egret.registerClass(AssetManagerEx,'AssetManagerEx');

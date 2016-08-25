@@ -1,5 +1,5 @@
 
-class LoginUI extends eui.Component {
+class LoginUI extends UIComponent {
 
 	private edt_account: eui.EditableText;
 	private edt_pwd: eui.EditableText;

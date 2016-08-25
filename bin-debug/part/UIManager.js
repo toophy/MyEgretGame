@@ -19,6 +19,7 @@ var UIManagerEx = (function (_super) {
         var mainNavbar = new MainNavicte();
         mainNavbar.dialogName = "mainNavbar";
         this._main.addChild(mainNavbar);
+        var test1 = new TestA(this._main);
     };
     /**
      * 响应对话框操作
@@ -26,26 +27,32 @@ var UIManagerEx = (function (_super) {
     p.onShowDialog = function (e) {
         var theDlg;
         theDlg = this._dlgs.getValue(e.data.name);
-        if (theDlg == undefined) {
-            switch (e.data.name) {
-                case "AboutDlg":
-                    theDlg = new AboutDlg();
-                    break;
-                case "PlayerDlg":
-                    theDlg = new LoginUI();
-                    break;
-                case "HerosDlg":
-                    break;
-                case "GoodsDlg":
-                    theDlg = new ChatDlg();
-                    break;
+        if (e.data.type == 1) {
+            if (theDlg == undefined || theDlg == null) {
+                switch (e.data.name) {
+                    case "AboutDlg":
+                        theDlg = new AboutDlg();
+                        break;
+                    case "PlayerDlg":
+                        theDlg = new LoginUI();
+                        break;
+                    case "HerosDlg":
+                        break;
+                    case "GoodsDlg":
+                        theDlg = new ChatDlg();
+                        break;
+                }
+                if (theDlg != undefined && theDlg != null) {
+                    theDlg.dialogName = e.data.name;
+                    this._dlgs.setValue(e.data.name, theDlg);
+                }
             }
-            theDlg.dialogName = e.data.name;
-            this._dlgs.setValue(e.data.name, theDlg);
         }
-        if (theDlg != undefined) {
+        if (theDlg != undefined && theDlg != null) {
             if (e.data.type == 0) {
-                this._main.removeChild(theDlg);
+                if (theDlg.parent != null && theDlg.parent != undefined) {
+                    theDlg.parent.removeChild(theDlg);
+                }
             }
             else {
                 this._main.addChild(theDlg);
@@ -86,7 +93,7 @@ var UIManagerEx = (function (_super) {
     p.isShowDialog = function (n) {
         var theDlg;
         theDlg = this._dlgs.getValue(n);
-        if (theDlg == undefined) {
+        if (theDlg == undefined || theDlg == null) {
             return false;
         }
         if (this._main.contains(theDlg) == false) {
