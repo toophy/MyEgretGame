@@ -84,7 +84,7 @@ class TestA {
     private _iAnimMode: number;
     private _nScaleBase: number;
     private bird: egret.Bitmap;
-    //private _act: Actor;
+    private _act: Actor;
 
 
     constructor(m: eui.UILayer) {
@@ -103,18 +103,17 @@ class TestA {
 
         var back = new TestBackup(m, "轻触屏幕调整显示对象位置");
 
+        this._main.addEventListener(egret.TouchEvent.TOUCH_BEGIN, (evt: egret.TouchEvent) => {
+            this.bird.x = evt.localX;
+            this.bird.y = evt.localY;
+            this._iAnimMode = (this._iAnimMode + 1) % 3;
+            this._act.SetPos(evt.localX, evt.localY);
+        }, this);
 
-        // this._main.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, (evt: egret.TouchEvent) => {
-        //     this.bird.x = evt.localX;
-        //     this.bird.y = evt.localY;
-        //     this._iAnimMode = (this._iAnimMode + 1) % 3;
-        //     //this._act.SetPos(evt.localX, evt.localY);
-        // }, this);
+        this.launchAnimations();
 
-        //this.launchAnimations();
-
-        //this._act = new Actor(7, 7);
-        //this._act.InitActor(this._main);
+        this._act = new Actor(7, 7);
+        this._act.InitActor(this._main);
 
         var capabilites: Array<egret.ITextElement> = [
             { text: "移动设备: " + egret.Capabilities.isMobile + "n", style: { size: 17, "fontFamily": "楷体" } },

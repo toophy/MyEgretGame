@@ -12,9 +12,9 @@ var DesertExample = (function (_super) {
         //load complete
         urlLoader.addEventListener(egret.Event.COMPLETE, function (event) {
             var data = egret.XML.parse(event.target.data);
-            var tmxTileMap = new tiled.TMXTilemap(2000, 2000, data, url);
-            tmxTileMap.render();
-            self.addChild(tmxTileMap);
+            self.tmxTileMap = new tiled.TMXTilemap(2000, 2000, data, url);
+            self.tmxTileMap.render();
+            self.addChild(self.tmxTileMap);
         }, url);
         urlLoader.load(new egret.URLRequest(url));
     }
