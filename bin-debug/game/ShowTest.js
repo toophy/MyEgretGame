@@ -71,8 +71,8 @@ egret.registerClass(Actor,'Actor');
  * 最基本的显示
  */
 var TestA = (function () {
+    //private _act: Actor;
     function TestA(m) {
-        var _this = this;
         this._main = m;
         this.bird = AssetManagerEx.createBitmapByName("skillIcon07_png");
         this.bird.x = 0;
@@ -84,15 +84,24 @@ var TestA = (function () {
         this.bird.x = this._main.stage.stageWidth * 0.5;
         this.bird.y = this._main.stage.stageHeight * 0.5;
         var back = new TestBackup(m, "轻触屏幕调整显示对象位置");
-        this._main.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (evt) {
-            _this.bird.x = evt.localX;
-            _this.bird.y = evt.localY;
-            _this._iAnimMode = (_this._iAnimMode + 1) % 3;
-            _this._act.SetPos(evt.localX, evt.localY);
-        }, this);
-        this.launchAnimations();
-        this._act = new Actor(7, 7);
-        this._act.InitActor(this._main);
+        // this._main.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, (evt: egret.TouchEvent) => {
+        //     this.bird.x = evt.localX;
+        //     this.bird.y = evt.localY;
+        //     this._iAnimMode = (this._iAnimMode + 1) % 3;
+        //     //this._act.SetPos(evt.localX, evt.localY);
+        // }, this);
+        //this.launchAnimations();
+        //this._act = new Actor(7, 7);
+        //this._act.InitActor(this._main);
+        var capabilites = [
+            { text: "移动设备: " + egret.Capabilities.isMobile + "n", style: { size: 17, "fontFamily": "楷体" } },
+            { text: "语言代码: " + egret.Capabilities.language + "n", style: { size: 17, "fontFamily": "楷体" } },
+            { text: "操作系统: " + egret.Capabilities.os + "n", style: { size: 17, "fontFamily": "楷体" } },
+            { text: "运行类型: " + egret.Capabilities.runtimeType + "n", style: { size: 17, "fontFamily": "楷体" } }
+        ];
+        var showCapabilities = new egret.TextField();
+        showCapabilities.textFlow = capabilites;
+        this._main.addChild(showCapabilities);
     }
     var d = __define,c=TestA,p=c.prototype;
     p.launchAnimations = function () {

@@ -15,7 +15,7 @@ class ActorMdlMgr {
     private actorMdls: xstl.Dictionary<number, ActorMdl>;
 
     constructor() {
-        this.actorMdls = new xstl.Dictionary<number,ActorMdl>();
+        this.actorMdls = new xstl.Dictionary<number, ActorMdl>();
         this.actorMdls[1] = new ActorMdl(1, "skillIcon01_png");
         this.actorMdls[2] = new ActorMdl(1, "skillIcon02_png");
         this.actorMdls[3] = new ActorMdl(1, "skillIcon03_png");
@@ -62,11 +62,11 @@ class Actor {
     public get MdlId(): number { return this.mdlId; }
     public get Pos(): egret.Point { return this.pos; }
     public get Sprite(): egret.Sprite { return this.sprite; }
-    public SetPos(x:number,y:number) {
+    public SetPos(x: number, y: number) {
         this.pos.x = x;
         this.pos.y = y;
-        this.sprite.x = x - this.sprite.width/2;
-        this.sprite.y = y - this.sprite.height/2;
+        this.sprite.x = x - this.sprite.width / 2;
+        this.sprite.y = y - this.sprite.height / 2;
     }
 
 }
@@ -75,7 +75,7 @@ class Actor {
  * 最基本的显示
  */
 class TestA {
-    private _main: Main;
+    private _main: eui.UILayer;
     private static STEP_ROT: number = 3;
     private static STEP_SCALE: number = 0.03;
     private static ANIM_ROT: number = 0;
@@ -84,10 +84,10 @@ class TestA {
     private _iAnimMode: number;
     private _nScaleBase: number;
     private bird: egret.Bitmap;
-    private _act : Actor;
+    //private _act: Actor;
 
 
-    constructor(m: Main) {
+    constructor(m: eui.UILayer) {
         this._main = m;
 
         this.bird = AssetManagerEx.createBitmapByName("skillIcon07_png");
@@ -104,17 +104,27 @@ class TestA {
         var back = new TestBackup(m, "轻触屏幕调整显示对象位置");
 
 
-        this._main.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, (evt: egret.TouchEvent) => {
-            this.bird.x = evt.localX;
-            this.bird.y = evt.localY;
-            this._iAnimMode = (this._iAnimMode + 1) % 3;
-            this._act.SetPos(evt.localX,evt.localY);
-        }, this);
+        // this._main.stage.addEventListener(egret.TouchEvent.TOUCH_BEGIN, (evt: egret.TouchEvent) => {
+        //     this.bird.x = evt.localX;
+        //     this.bird.y = evt.localY;
+        //     this._iAnimMode = (this._iAnimMode + 1) % 3;
+        //     //this._act.SetPos(evt.localX, evt.localY);
+        // }, this);
 
-        this.launchAnimations();
+        //this.launchAnimations();
 
-        this._act = new Actor(7,7);
-        this._act.InitActor(this._main);
+        //this._act = new Actor(7, 7);
+        //this._act.InitActor(this._main);
+
+        var capabilites: Array<egret.ITextElement> = [
+            { text: "移动设备: " + egret.Capabilities.isMobile + "n", style: { size: 17, "fontFamily": "楷体" } },
+            { text: "语言代码: " + egret.Capabilities.language + "n", style: { size: 17, "fontFamily": "楷体" } },
+            { text: "操作系统: " + egret.Capabilities.os + "n", style: { size: 17, "fontFamily": "楷体" } },
+            { text: "运行类型: " + egret.Capabilities.runtimeType + "n", style: { size: 17, "fontFamily": "楷体" } }
+        ];
+        var showCapabilities: egret.TextField = new egret.TextField();
+        showCapabilities.textFlow = capabilites;
+        this._main.addChild(showCapabilities);
     }
 
     private launchAnimations() {
@@ -140,11 +150,11 @@ class TestA {
 }
 
 class TestBackup {
-    private _main: Main;
+    private _main: eui.UILayer;
     private _txInfo: egret.TextField;
     private _bgInfo: egret.Shape;
 
-    constructor(m: Main, txt: string) {
+    constructor(m: eui.UILayer, txt: string) {
         this._main = m;
 
         /// 提示信息

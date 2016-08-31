@@ -24,6 +24,10 @@
 		},
 		{
 			"name": "tween"
+		},
+		{
+			"name": "tiled",
+			"path": "../libs/libsrc"
 		}
 	]
 }

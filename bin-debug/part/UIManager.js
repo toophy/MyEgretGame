@@ -6,7 +6,14 @@ var UIManagerEx = (function (_super) {
     function UIManagerEx(m) {
         _super.call(this);
         this._main = m;
+        this._mapLayer = new egret.DisplayObjectContainer();
+        this._mapUILayer = new eui.UILayer();
+        this._euiLayer = new eui.UILayer();
+        this._webLayer = new eui.UILayer();
         this._dlgs = new xstl.Dictionary();
+        this._mapUILayer.touchThrough = true;
+        this._euiLayer.touchThrough = true;
+        this._webLayer.touchThrough = true;
         this.addEventListener(GameEvents.Evt_ShowDialog, this.onShowDialog, this);
         this.startCreateScene();
     }
@@ -16,10 +23,16 @@ var UIManagerEx = (function (_super) {
      * Create scene interface
      */
     p.startCreateScene = function () {
+        this._main.addChild(this._mapLayer);
+        this._main.addChild(this._mapUILayer);
+        this._main.addChild(this._euiLayer);
+        this._main.addChild(this._webLayer);
+        var desert = new DesertExample();
+        this._mapLayer.addChild(desert);
+        var test1 = new TestA(this._mapUILayer);
         var mainNavbar = new MainNavicte();
         mainNavbar.dialogName = "mainNavbar";
-        this._main.addChild(mainNavbar);
-        var test1 = new TestA(this._main);
+        this._euiLayer.addChild(mainNavbar);
     };
     /**
      * 响应对话框操作
@@ -29,22 +42,13 @@ var UIManagerEx = (function (_super) {
         theDlg = this._dlgs.getValue(e.data.name);
         if (e.data.type == 1) {
             if (theDlg == undefined || theDlg == null) {
-                switch (e.data.name) {
-                    case "AboutDlg":
-                        theDlg = new AboutDlg();
-                        break;
-                    case "PlayerDlg":
-                        theDlg = new LoginUI();
-                        break;
-                    case "HerosDlg":
-                        break;
-                    case "GoodsDlg":
-                        theDlg = new ChatDlg();
-                        break;
-                }
-                if (theDlg != undefined && theDlg != null) {
-                    theDlg.dialogName = e.data.name;
-                    this._dlgs.setValue(e.data.name, theDlg);
+                var root_class = egret.getDefinitionByName(e.data.name);
+                if (root_class != null && root_class != undefined) {
+                    theDlg = new root_class();
+                    if (theDlg != undefined && theDlg != null) {
+                        theDlg.dialogName = e.data.name;
+                        this._dlgs.setValue(e.data.name, theDlg);
+                    }
                 }
             }
         }

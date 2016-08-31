@@ -12,7 +12,6 @@ var AboutDlg = (function (_super) {
     p.onComplete = function () {
         var _this = this;
         this.btnClose.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            console.log("close about panel");
             _this.Hide();
         }, this);
     };

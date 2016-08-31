@@ -10,7 +10,6 @@ class AboutDlg extends UIComponent{
 
     private onComplete():void{
         this.btnClose.addEventListener(egret.TouchEvent.TOUCH_TAP,()=>{
-            console.log("close about panel");
             this.Hide();
         }, this);
     }
