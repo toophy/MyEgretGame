@@ -73,6 +73,7 @@ declare module eui {
          * @platform Web,Native
          */
         static bindHandler(host: any, chain: string[], handler: (value: any) => void, thisObject: any): Watcher;
+        static $bindProperties(host: any, templates: any[], chainIndex: number[], target: any, prop: string): Watcher;
     }
 }
 declare module eui {
@@ -886,7 +887,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: any;
         /**
          * @language en_US
          * The horizontal distance in pixels from the right edge of the component to the
@@ -908,7 +909,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: any;
         /**
          * @language en_US
          * The vertical distance in pixels from the top edge of the component to the
@@ -930,7 +931,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: any;
         /**
          * @language en_US
          * The vertical distance in pixels from the bottom edge of the component to the
@@ -952,7 +953,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: any;
         /**
          * @language en_US
          * The horizontal distance in pixels from the center of the component to the
@@ -974,7 +975,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: any;
         /**
          * @language en_US
          * The vertical distance in pixels from the center of the component to the
@@ -996,7 +997,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: any;
         /**
          * @language en_US
          * Specifies the width of a component as a percentage
@@ -1593,32 +1594,32 @@ declare module eui.sys {
          * @private
          * 距父级容器离左边距离
          */
-        left: number;
+        left: any;
         /**
          * @private
          * 距父级容器右边距离
          */
-        right: number;
+        right: any;
         /**
          * @private
          * 距父级容器顶部距离
          */
-        top: number;
+        top: any;
         /**
          * @private
          * 距父级容器底部距离
          */
-        bottom: number;
+        bottom: any;
         /**
          * @private
          * 在父级容器中距水平中心位置的距离
          */
-        horizontalCenter: number;
+        horizontalCenter: any;
         /**
          * @private
          * 在父级容器中距竖直中心位置的距离
          */
-        verticalCenter: number;
+        verticalCenter: any;
         /**
          * @private
          * 相对父级容器宽度的百分比
@@ -1668,20 +1669,6 @@ declare module eui.sys {
         $setHeight(value: number): boolean;
         /**
          * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setScaleX(value: number): boolean;
-        /**
-         * @private
-         *
-         * @param value
-         * @returns
-         */
-        $setScaleY(value: number): boolean;
-        /**
-         * @private
          * 组件的最小宽度,此属性设置为大于maxWidth的值时无效。同时影响测量和自动布局的尺寸。
          */
         minWidth: number;
@@ -1713,6 +1700,22 @@ declare module eui.sys {
          * 不会影响显式标记尺寸属性
          */
         private setActualSize(w, h);
+        /**
+         * @private
+         */
+        $invalidateMatrix(): void;
+        /**
+         * @private
+         */
+        $setMatrix(matrix: egret.Matrix, needUpdateProperties?: boolean): boolean;
+        /**
+         * @private
+         */
+        $setAnchorOffsetX(value: number): boolean;
+        /**
+         * @private
+         */
+        $setAnchorOffsetY(value: number): boolean;
         /**
          * @private
          *
@@ -1821,6 +1824,10 @@ declare module eui.sys {
          * @param h
          */
         private applyMatrix(bounds, w, h);
+        /**
+         * @private
+         */
+        private getAnchorMatrix();
     }
     /**
      * @private
@@ -1974,7 +1981,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: any;
         /**
          * @copy eui.UIComponent#right
          *
@@ -1982,7 +1989,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: any;
         /**
          * @copy eui.UIComponent#top
          *
@@ -1990,7 +1997,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: any;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -1998,7 +2005,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: any;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -2006,7 +2013,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: any;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -2014,7 +2021,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: any;
         /**
          * @copy eui.UIComponent#percentWidth
          *
@@ -2618,7 +2625,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: any;
         /**
          * @inheritDoc
          *
@@ -2626,7 +2633,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: any;
         /**
          * @inheritDoc
          *
@@ -2634,7 +2641,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: any;
         /**
          * @inheritDoc
          *
@@ -2642,7 +2649,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: any;
         /**
          * @inheritDoc
          *
@@ -2650,7 +2657,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: any;
         /**
          * @inheritDoc
          *
@@ -2658,7 +2665,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: any;
         /**
          * @inheritDoc
          *
@@ -3750,7 +3757,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: any;
         /**
          * @inheritDoc
          *
@@ -3758,7 +3765,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: any;
         /**
          * @inheritDoc
          *
@@ -3766,7 +3773,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: any;
         /**
          * @inheritDoc
          *
@@ -3774,7 +3781,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: any;
         /**
          * @inheritDoc
          *
@@ -3782,7 +3789,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: any;
         /**
          * @inheritDoc
          *
@@ -3790,7 +3797,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: any;
         /**
          * @inheritDoc
          *
@@ -4687,7 +4694,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: any;
         /**
          * @inheritDoc
          *
@@ -4695,7 +4702,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: any;
         /**
          * @inheritDoc
          *
@@ -4703,7 +4710,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: any;
         /**
          * @inheritDoc
          *
@@ -4711,7 +4718,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: any;
         /**
          * @inheritDoc
          *
@@ -4719,7 +4726,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: any;
         /**
          * @inheritDoc
          *
@@ -4727,7 +4734,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: any;
         /**
          * @inheritDoc
          *
@@ -6116,7 +6123,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: any;
         /**
          * @copy eui.UIComponent#right
          *
@@ -6124,7 +6131,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: any;
         /**
          * @copy eui.UIComponent#top
          *
@@ -6132,7 +6139,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: any;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -6140,7 +6147,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: any;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -6148,7 +6155,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: any;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -6156,7 +6163,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: any;
         /**
          * @copy eui.UIComponent#percentWidth
          *
@@ -6666,7 +6673,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        left: number;
+        left: any;
         /**
          * @copy eui.UIComponent#right
          *
@@ -6674,7 +6681,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        right: number;
+        right: any;
         /**
          * @copy eui.UIComponent#top
          *
@@ -6682,7 +6689,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        top: number;
+        top: any;
         /**
          * @copy eui.UIComponent#bottom
          *
@@ -6690,7 +6697,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        bottom: number;
+        bottom: any;
         /**
          * @copy eui.UIComponent#horizontalCenter
          *
@@ -6698,7 +6705,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        horizontalCenter: number;
+        horizontalCenter: any;
         /**
          * @copy eui.UIComponent#verticalCenter
          *
@@ -6706,7 +6713,7 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        verticalCenter: number;
+        verticalCenter: any;
         /**
          * @copy eui.UIComponent#percentWidth
          *
@@ -9507,6 +9514,7 @@ declare module eui.sys {
         maxHeight = 5,
         text = 6,
         restrict = 7,
+        inputType = 8,
     }
 }
 declare module eui {
@@ -9601,6 +9609,21 @@ declare module eui {
          * @platform Web,Native
          */
         displayAsPassword: boolean;
+        /**
+         * @copy egret.TextField#inputType
+         *
+         * @version Egret 3.1.6
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        /**
+         * @copy egret.TextField#inputType
+         *
+         * @version Egret 3.1.6
+         * @version eui 1.0
+         * @platform Web,Native
+         */
+        inputType: string;
         /**
          * @copy egret.TextField#textColor
          *
@@ -12116,7 +12139,7 @@ declare module eui.sys {
         /**
          * @private
          */
-        constructor(target: string, property: string, expression: string);
+        constructor(target: string, property: string, templates: string[], chainIndex: number[]);
         /**
          * @private
          * 目标实例名
@@ -12129,9 +12152,14 @@ declare module eui.sys {
         property: string;
         /**
          * @private
-         * 绑定表达式
+         * 绑定的模板列表
          */
-        expression: string;
+        templates: string[];
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        chainIndex: number[];
         /**
          * @private
          *
@@ -12146,7 +12174,7 @@ declare module eui.sys {
         /**
          * @private
          */
-        constructor(target: string, property: string, expression: string);
+        constructor(target: string, property: string, templates: string[], chainIndex: number[]);
         /**
          * @private
          * 目标实例名
@@ -12159,9 +12187,14 @@ declare module eui.sys {
         property: string;
         /**
          * @private
-         * 绑定表达式
+         * 绑定的模板列表
          */
-        expression: string;
+        templates: string[];
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        chainIndex: number[];
         /**
          * @private
          *
@@ -12368,12 +12401,14 @@ declare module eui.sys {
          * @private
          * 格式化值
          */
-        private formatValue(key, value, node, haveState?, stateCallBack?);
+        private formatValue(key, value, node);
         /**
          * @private
          * 格式化字符串
          */
         private formatString(value);
+        private formatBinding(key, value, node);
+        private parseTemplates(value);
         /**
          * @private
          /**
@@ -14974,17 +15009,22 @@ declare module eui {
          * @version eui 1.0
          * @platform Web,Native
          */
-        constructor(host: any, chain: string[], target: any, prop: string);
+        constructor(host: any, templates: any[], chainIndex: number[], target: any, prop: string);
         /**
          * 皮肤对象
          * @private
          */
         private host;
         /**
-         * 绑定链
          * @private
+         * 绑定的模板列表
          */
-        private chain;
+        templates: any[];
+        /**
+         * @private
+         * chainIndex是一个索引列表，每个索引指向templates中的一个值，该值是代表属性链。
+         */
+        chainIndex: number[];
         /**
          * 要绑定的对象
          * @private
