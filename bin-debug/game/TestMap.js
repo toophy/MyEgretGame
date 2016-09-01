@@ -16,6 +16,7 @@ var DesertExample = (function (_super) {
             self.tmxTileMap.render();
             self.touchEnabled = true;
             self.addChild(self.tmxTileMap);
+            console.log(self.tmxTileMap);
             self._act = new Actor(7, 7);
             self._act.SetPos(1, 1);
             var lays = self.tmxTileMap.getLayers();

@@ -27,6 +27,7 @@ class DesertExample extends egret.DisplayObjectContainer {
             self.tmxTileMap.render();
             self.touchEnabled = true;
             self.addChild(self.tmxTileMap);
+            console.log(self.tmxTileMap);
 
 
             self._act = new Actor(7, 7);

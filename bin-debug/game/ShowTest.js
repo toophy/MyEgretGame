@@ -66,6 +66,13 @@ var Actor = (function () {
         this.pos.y = y;
         this.sprite.x = x - this.sprite.width / 2;
         this.sprite.y = y - this.sprite.height / 2;
+        // let focus_index:number = this.constainer.getChildIndex(this.sprite);
+        // let next_object:egret.DisplayObject = this.constainer.getChildAt(focus_index+1);
+        // if (next_object!=undefined){
+        //     let tile_obj:tiled.TMXTile = next_object;
+        //     tile_obj.tileX;
+        //     if (  tile_obj.tileY*
+        // }
     };
     p.Move = function (keyCode) {
         switch (keyCode) {

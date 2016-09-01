@@ -38,7 +38,7 @@ class Actor {
     private mdlId: number;
     private pos: egret.Point;
     private bmp: egret.Bitmap;
-    private sprite: egret.Sprite;
+    private sprite: tiled.TMXObject;
     private constainer: egret.DisplayObjectContainer;
 
     constructor(id: number, mdlId: number) {
@@ -46,7 +46,7 @@ class Actor {
         this.id = id;
         this.mdlId = mdlId;
         this.pos = new egret.Point();
-        this.sprite = new egret.Sprite();
+        this.sprite = new tiled.TMXObject();
 
         let bmp: egret.Bitmap = AssetManagerEx.createBitmapByName(g_ActorMdlMgr.GetMdl(mdlId).bodyImg);
         this.sprite.addChild(bmp);
@@ -73,6 +73,15 @@ class Actor {
         this.pos.y = y;
         this.sprite.x = x - this.sprite.width / 2;
         this.sprite.y = y - this.sprite.height / 2;
+
+        // let focus_index:number = this.constainer.getChildIndex(this.sprite);
+        // let next_object:egret.DisplayObject = this.constainer.getChildAt(focus_index+1);
+        // if (next_object!=undefined){
+        //     let tile_obj:tiled.TMXTile = next_object;
+        //     tile_obj.tileX;
+        //     if (  tile_obj.tileY*
+
+        // }
     }
     public Move(keyCode:number){
         switch(keyCode){
