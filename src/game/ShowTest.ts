@@ -76,27 +76,9 @@ class Actor {
         this.sprite.x = x - this.sprite.width / 2;
         this.sprite.y = y - this.sprite.height / 2;
 
-        //this.constainer.setChildIndex(this.sprite,this.pos.y*this._tilemap.tilewidth*this._tilemap.cols+this.pos.x);
-        let my_z: number = this.pos.y * this._tilemap.tilewidth * this._tilemap.cols + this.pos.x;
-
-        if (this.constainer.numChildren > 0) {
-            for (var a = 0; a < this.constainer.numChildren; a++) {
-                let val: egret.DisplayObject = this.constainer.getChildAt(a);
-                if (val != this.sprite) {
-                    let z: number = val.y * this._tilemap.tilewidth * this._tilemap.cols + val.x;
-                    if (my_z < z) {
-                        if (a>0) {
-                            this.constainer.setChildIndex(this.sprite, a-1);                            
-                        } else {
-                            this.constainer.setChildIndex(this.sprite, 0);
-                        }                        
-                        return;
-                    }
-                }
-            }
-            this.constainer.setChildIndex(this.sprite, this.constainer.numChildren);
-        } else {
-            this.constainer.setChildIndex(this.sprite, 0);
+        let group:tiled.TMXObjectGroup = <tiled.TMXObjectGroup>this.constainer;
+        if (group!=undefined) {
+            group.addZChild(this.sprite);
         }
     }
     public Move(keyCode: number) {

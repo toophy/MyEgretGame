@@ -27,7 +27,7 @@
 		},
 		{
 			"name": "tiled",
-			"path": "../libs/libsrc"
+			"path": "../libs/tiled/libsrc"
 		}
 	]
 }

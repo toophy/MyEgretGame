@@ -67,28 +67,9 @@ var Actor = (function () {
         this.pos.y = y;
         this.sprite.x = x - this.sprite.width / 2;
         this.sprite.y = y - this.sprite.height / 2;
-        //this.constainer.setChildIndex(this.sprite,this.pos.y*this._tilemap.tilewidth*this._tilemap.cols+this.pos.x);
-        var my_z = this.pos.y * this._tilemap.tilewidth * this._tilemap.cols + this.pos.x;
-        if (this.constainer.numChildren > 0) {
-            for (var a = 0; a < this.constainer.numChildren; a++) {
-                var val = this.constainer.getChildAt(a);
-                if (val != this.sprite) {
-                    var z = val.y * this._tilemap.tilewidth * this._tilemap.cols + val.x;
-                    if (my_z < z) {
-                        if (a > 0) {
-                            this.constainer.setChildIndex(this.sprite, a - 1);
-                        }
-                        else {
-                            this.constainer.setChildIndex(this.sprite, 0);
-                        }
-                        return;
-                    }
-                }
-            }
-            this.constainer.setChildIndex(this.sprite, this.constainer.numChildren);
-        }
-        else {
-            this.constainer.setChildIndex(this.sprite, 0);
+        var group = this.constainer;
+        if (group != undefined) {
+            group.addZChild(this.sprite);
         }
     };
     p.Move = function (keyCode) {
