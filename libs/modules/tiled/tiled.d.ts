@@ -668,6 +668,10 @@ declare module tiled {
         name: string;
         draw(): void;
         /**
+         * 排序(z序)插入
+         */
+        addZChild(s: egret.DisplayObject): void;
+        /**
          * 渲染
          * @version Egret 3.0.3
          */

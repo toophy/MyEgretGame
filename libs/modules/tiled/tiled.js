@@ -66,7 +66,7 @@ var tiled;
     tiled.TMXAnimation = TMXAnimation;
     egret.registerClass(TMXAnimation,'tiled.TMXAnimation');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXAnimation.js.map
+
 var tiled;
 (function (tiled) {
     var TMXAnimationFrame = (function () {
@@ -118,7 +118,7 @@ var tiled;
     tiled.TMXAnimationFrame = TMXAnimationFrame;
     egret.registerClass(TMXAnimationFrame,'tiled.TMXAnimationFrame');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXAnimationFrame.js.map
+
 var tiled;
 (function (tiled) {
     /**
@@ -254,7 +254,7 @@ var tiled;
     tiled.TMXConstants = TMXConstants;
     egret.registerClass(TMXConstants,'tiled.TMXConstants');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXConstants.js.map
+
 var tiled;
 (function (tiled) {
     var TMXImageLoadEvent = (function (_super) {
@@ -290,8 +290,8 @@ var tiled;
     tiled.TMXImageLoadEvent = TMXImageLoadEvent;
     egret.registerClass(TMXImageLoadEvent,'tiled.TMXImageLoadEvent');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXImageLoadEvent.js.map
-//# sourceMappingURL=ILayer.js.map
+
+
 var tiled;
 (function (tiled) {
     var TMXColorLayer = (function (_super) {
@@ -318,7 +318,7 @@ var tiled;
     tiled.TMXColorLayer = TMXColorLayer;
     egret.registerClass(TMXColorLayer,'tiled.TMXColorLayer');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXColorLayer.js.map
+
 var tiled;
 (function (tiled) {
     var TMXLayerBase = (function (_super) {
@@ -367,7 +367,7 @@ var tiled;
     tiled.TMXLayerBase = TMXLayerBase;
     egret.registerClass(TMXLayerBase,'tiled.TMXLayerBase',["tiled.ILayer"]);
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXLayerBase.js.map
+
 var tiled;
 (function (tiled) {
     var TMXImageLayer = (function (_super) {
@@ -476,7 +476,7 @@ var tiled;
     tiled.TMXImageLayer = TMXImageLayer;
     egret.registerClass(TMXImageLayer,'tiled.TMXImageLayer');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXImageLayer.js.map
+
 var tiled;
 (function (tiled) {
     var TMXLayer = (function (_super) {
@@ -784,7 +784,7 @@ var tiled;
     tiled.TMXLayer = TMXLayer;
     egret.registerClass(TMXLayer,'tiled.TMXLayer');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXLayer.js.map
+
 var tiled;
 (function (tiled) {
     var TMXImage = (function (_super) {
@@ -874,7 +874,7 @@ var tiled;
     tiled.TMXImage = TMXImage;
     egret.registerClass(TMXImage,'tiled.TMXImage');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXImage.js.map
+
 var tiled;
 (function (tiled) {
     //可能存在普通对象，也可能存在动画
@@ -1116,7 +1116,7 @@ var tiled;
     tiled.TMXObject = TMXObject;
     egret.registerClass(TMXObject,'tiled.TMXObject');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXObject.js.map
+
 var tiled;
 (function (tiled) {
     var TMXObjectGroup = (function (_super) {
@@ -1159,9 +1159,37 @@ var tiled;
                     var object = new tiled.TMXObject(this._childrens[i], this._orientaion, this._tilesets, this._z, this._color);
                     object.alpha = this._opacity;
                     this._objects[i] = object;
-                    this.addChild(object);
+                    this.addZChild(object);
                     this._objectHash[object.id] = object;
                 }
+                this._objects[i];
+            }
+        };
+        /**
+         * 排序(z序)插入
+         */
+        p.addZChild = function (s) {
+            var my_z = (s.y + s.height) * this._tilesets.tilemap.tilewidth * this._tilesets.tilemap.cols + s.x + s.width;
+            if (this.numChildren > 0) {
+                for (var a = 0; a < this.numChildren; a++) {
+                    var val = this.getChildAt(a);
+                    if (val != s) {
+                        var z = (val.y + val.height) * this._tilesets.tilemap.tilewidth * this._tilesets.tilemap.cols + val.x + val.width;
+                        if (my_z < z) {
+                            if (a > 0) {
+                                this.setChildIndex(s, a - 1);
+                            }
+                            else {
+                                this.setChildIndex(s, 0);
+                            }
+                            return;
+                        }
+                    }
+                    this.setChildIndex(s, this.numChildren);
+                }
+            }
+            else {
+                this.setChildIndex(s, 0);
             }
         };
         /**
@@ -1236,7 +1264,7 @@ var tiled;
     tiled.TMXObjectGroup = TMXObjectGroup;
     egret.registerClass(TMXObjectGroup,'tiled.TMXObjectGroup');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXObjectGroup.js.map
+
 var tiled;
 (function (tiled) {
     /**
@@ -1256,7 +1284,7 @@ var tiled;
     tiled.TMXProperty = TMXProperty;
     egret.registerClass(TMXProperty,'tiled.TMXProperty');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXProperty.js.map
+
 var tiled;
 (function (tiled) {
     var TMXRenderer = (function () {
@@ -1338,7 +1366,7 @@ var tiled;
     tiled.TMXRenderer = TMXRenderer;
     egret.registerClass(TMXRenderer,'tiled.TMXRenderer');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXRenderer.js.map
+
 var tiled;
 (function (tiled) {
     var TMXHexagonalRenderer = (function (_super) {
@@ -1544,7 +1572,7 @@ var tiled;
     tiled.TMXHexagonalRenderer = TMXHexagonalRenderer;
     egret.registerClass(TMXHexagonalRenderer,'tiled.TMXHexagonalRenderer');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXHexagonalRenderer.js.map
+
 var tiled;
 (function (tiled) {
     var TMXIsometricRenderer = (function (_super) {
@@ -1696,7 +1724,7 @@ var tiled;
     tiled.TMXIsometricRenderer = TMXIsometricRenderer;
     egret.registerClass(TMXIsometricRenderer,'tiled.TMXIsometricRenderer');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXIsometricRenderer.js.map
+
 var tiled;
 (function (tiled) {
     var TMXOrthogonalRenderer = (function (_super) {
@@ -1796,7 +1824,7 @@ var tiled;
     tiled.TMXOrthogonalRenderer = TMXOrthogonalRenderer;
     egret.registerClass(TMXOrthogonalRenderer,'tiled.TMXOrthogonalRenderer');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXOrthogonalRenderer.js.map
+
 var tiled;
 (function (tiled) {
     var Ellipse = (function (_super) {
@@ -1834,7 +1862,7 @@ var tiled;
     tiled.Ellipse = Ellipse;
     egret.registerClass(Ellipse,'tiled.Ellipse');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=Ellipse.js.map
+
 var tiled;
 (function (tiled) {
     var Polygon = (function (_super) {
@@ -1878,7 +1906,7 @@ var tiled;
     tiled.Polygon = Polygon;
     egret.registerClass(Polygon,'tiled.Polygon');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=Polygon.js.map
+
 var tiled;
 (function (tiled) {
     var PolyLine = (function (_super) {
@@ -1922,7 +1950,7 @@ var tiled;
     tiled.PolyLine = PolyLine;
     egret.registerClass(PolyLine,'tiled.PolyLine');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=PolyLine.js.map
+
 var tiled;
 (function (tiled) {
     var TMXTile = (function (_super) {
@@ -2072,7 +2100,7 @@ var tiled;
     tiled.TMXTile = TMXTile;
     egret.registerClass(TMXTile,'tiled.TMXTile');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXTile.js.map
+
 var tiled;
 (function (tiled) {
     var TMXTileset = (function () {
@@ -2412,7 +2440,7 @@ var tiled;
     tiled.TMXTileset = TMXTileset;
     egret.registerClass(TMXTileset,'tiled.TMXTileset');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXTileset.js.map
+
 var tiled;
 (function (tiled) {
     var TMXTilesetGroup = (function () {
@@ -2502,7 +2530,7 @@ var tiled;
     tiled.TMXTilesetGroup = TMXTilesetGroup;
     egret.registerClass(TMXTilesetGroup,'tiled.TMXTilesetGroup');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXTilesetGroup.js.map
+
 var tiled;
 (function (tiled) {
     var TMXTilemap = (function (_super) {
@@ -2851,7 +2879,7 @@ var tiled;
     tiled.TMXTilemap = TMXTilemap;
     egret.registerClass(TMXTilemap,'tiled.TMXTilemap');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXTilemap.js.map
+
 var tiled;
 (function (tiled) {
     var Base64 = (function () {
@@ -2982,7 +3010,7 @@ var tiled;
     tiled.Base64 = Base64;
     egret.registerClass(Base64,'tiled.Base64');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=Base64.js.map
+
 var tiled;
 (function (tiled) {
     var TMXUtils = (function () {
@@ -3065,5 +3093,5 @@ var tiled;
     tiled.TMXUtils = TMXUtils;
     egret.registerClass(TMXUtils,'tiled.TMXUtils');
 })(tiled || (tiled = {}));
-//# sourceMappingURL=TMXUtils.js.map
-//# sourceMappingURL=tmp.js.map
+
+

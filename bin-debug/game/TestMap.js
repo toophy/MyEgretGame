@@ -16,11 +16,10 @@ var DesertExample = (function (_super) {
             self.tmxTileMap.render();
             self.touchEnabled = true;
             self.addChild(self.tmxTileMap);
-            console.log(self.tmxTileMap);
             self._act = new Actor(7, 7);
-            self._act.SetPos(1, 1);
             var lays = self.tmxTileMap.getLayers();
-            self._act.InitActor(lays[1]);
+            self._act.InitActor(lays[1], self.tmxTileMap);
+            self._act.SetPos(1, 1);
             g_UIMgr.setFocusActor(self._act);
             self.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (evt) {
                 self.dragBegin_x = evt.localX;
@@ -50,6 +49,24 @@ var DesertExample = (function (_super) {
         urlLoader.load(new egret.URLRequest(url));
     }
     var d = __define,c=DesertExample,p=c.prototype;
+    p.addZChild = function (g, s) {
+        var my_z = s.y * this.tmxTileMap.tilewidth * this.tmxTileMap.cols + s.x;
+        if (g.numChildren > 0) {
+            for (var a = 0; a < g.numChildren; a++) {
+                var val = g.getChildAt(a);
+                if (val != s) {
+                    var z = val.y * this.tmxTileMap.tilewidth * this.tmxTileMap.cols + val.x;
+                    if (my_z < z) {
+                        g.setChildIndex(s, a);
+                        break;
+                    }
+                }
+            }
+        }
+        else {
+            g.setChildIndex(s, 0);
+        }
+    };
     return DesertExample;
 }(egret.DisplayObjectContainer));
 egret.registerClass(DesertExample,'DesertExample');

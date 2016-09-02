@@ -42,8 +42,9 @@ var Actor = (function () {
         // this.sprite.graphics.endFill();
     }
     var d = __define,c=Actor,p=c.prototype;
-    p.InitActor = function (c) {
+    p.InitActor = function (c, t) {
         this.constainer = c;
+        this._tilemap = t;
         // this.sprite.x = this.pos.x;
         // this.sprite.y = this.pos.y;
         this.constainer.addChild(this.sprite);
@@ -66,13 +67,29 @@ var Actor = (function () {
         this.pos.y = y;
         this.sprite.x = x - this.sprite.width / 2;
         this.sprite.y = y - this.sprite.height / 2;
-        // let focus_index:number = this.constainer.getChildIndex(this.sprite);
-        // let next_object:egret.DisplayObject = this.constainer.getChildAt(focus_index+1);
-        // if (next_object!=undefined){
-        //     let tile_obj:tiled.TMXTile = next_object;
-        //     tile_obj.tileX;
-        //     if (  tile_obj.tileY*
-        // }
+        //this.constainer.setChildIndex(this.sprite,this.pos.y*this._tilemap.tilewidth*this._tilemap.cols+this.pos.x);
+        var my_z = this.pos.y * this._tilemap.tilewidth * this._tilemap.cols + this.pos.x;
+        if (this.constainer.numChildren > 0) {
+            for (var a = 0; a < this.constainer.numChildren; a++) {
+                var val = this.constainer.getChildAt(a);
+                if (val != this.sprite) {
+                    var z = val.y * this._tilemap.tilewidth * this._tilemap.cols + val.x;
+                    if (my_z < z) {
+                        if (a > 0) {
+                            this.constainer.setChildIndex(this.sprite, a - 1);
+                        }
+                        else {
+                            this.constainer.setChildIndex(this.sprite, 0);
+                        }
+                        return;
+                    }
+                }
+            }
+            this.constainer.setChildIndex(this.sprite, this.constainer.numChildren);
+        }
+        else {
+            this.constainer.setChildIndex(this.sprite, 0);
+        }
     };
     p.Move = function (keyCode) {
         switch (keyCode) {

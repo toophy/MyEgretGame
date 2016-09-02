@@ -38,15 +38,16 @@ class Actor {
     private mdlId: number;
     private pos: egret.Point;
     private bmp: egret.Bitmap;
-    private sprite: tiled.TMXObject;
+    private sprite: egret.Sprite;
     private constainer: egret.DisplayObjectContainer;
+    private _tilemap: tiled.TMXTilemap;
 
     constructor(id: number, mdlId: number) {
 
         this.id = id;
         this.mdlId = mdlId;
         this.pos = new egret.Point();
-        this.sprite = new tiled.TMXObject();
+        this.sprite = new egret.Sprite();
 
         let bmp: egret.Bitmap = AssetManagerEx.createBitmapByName(g_ActorMdlMgr.GetMdl(mdlId).bodyImg);
         this.sprite.addChild(bmp);
@@ -56,12 +57,13 @@ class Actor {
         // this.sprite.graphics.endFill();
     }
 
-    public InitActor(c: egret.DisplayObjectContainer) {
+    public InitActor(c: egret.DisplayObjectContainer, t: tiled.TMXTilemap) {
         this.constainer = c;
+        this._tilemap = t;
         // this.sprite.x = this.pos.x;
         // this.sprite.y = this.pos.y;
         this.constainer.addChild(this.sprite);
-        this.constainer.setChildIndex(this.sprite,0);
+        this.constainer.setChildIndex(this.sprite, 0);
     }
 
     public get Id(): number { return this.id; }
@@ -74,37 +76,51 @@ class Actor {
         this.sprite.x = x - this.sprite.width / 2;
         this.sprite.y = y - this.sprite.height / 2;
 
-        // let focus_index:number = this.constainer.getChildIndex(this.sprite);
-        // let next_object:egret.DisplayObject = this.constainer.getChildAt(focus_index+1);
-        // if (next_object!=undefined){
-        //     let tile_obj:tiled.TMXTile = next_object;
-        //     tile_obj.tileX;
-        //     if (  tile_obj.tileY*
+        //this.constainer.setChildIndex(this.sprite,this.pos.y*this._tilemap.tilewidth*this._tilemap.cols+this.pos.x);
+        let my_z: number = this.pos.y * this._tilemap.tilewidth * this._tilemap.cols + this.pos.x;
 
-        // }
+        if (this.constainer.numChildren > 0) {
+            for (var a = 0; a < this.constainer.numChildren; a++) {
+                let val: egret.DisplayObject = this.constainer.getChildAt(a);
+                if (val != this.sprite) {
+                    let z: number = val.y * this._tilemap.tilewidth * this._tilemap.cols + val.x;
+                    if (my_z < z) {
+                        if (a>0) {
+                            this.constainer.setChildIndex(this.sprite, a-1);                            
+                        } else {
+                            this.constainer.setChildIndex(this.sprite, 0);
+                        }                        
+                        return;
+                    }
+                }
+            }
+            this.constainer.setChildIndex(this.sprite, this.constainer.numChildren);
+        } else {
+            this.constainer.setChildIndex(this.sprite, 0);
+        }
     }
-    public Move(keyCode:number){
-        switch(keyCode){
+    public Move(keyCode: number) {
+        switch (keyCode) {
             case 37:
-            this.SetPos(this.pos.x-20,this.pos.y);
-            break;
+                this.SetPos(this.pos.x - 20, this.pos.y);
+                break;
 
             case 38:
-            this.SetPos(this.pos.x,this.pos.y-20);
-            break;
+                this.SetPos(this.pos.x, this.pos.y - 20);
+                break;
 
             case 39:
-            this.SetPos(this.pos.x+20,this.pos.y);
-            break;
+                this.SetPos(this.pos.x + 20, this.pos.y);
+                break;
 
             case 40:
-            this.SetPos(this.pos.x,this.pos.y+20);
-            break;
+                this.SetPos(this.pos.x, this.pos.y + 20);
+                break;
         }
-// keycode   37 = Left
-// keycode   38 = Up
-// keycode   39 = Right
-// keycode   40 = Down
+        // keycode   37 = Left
+        // keycode   38 = Up
+        // keycode   39 = Right
+        // keycode   40 = Down
     }
 
 }
@@ -122,7 +138,7 @@ class TestA {
     private _iAnimMode: number;
     private _nScaleBase: number;
     // private bird: egret.Bitmap;
-    
+
 
 
     constructor(m: eui.UILayer) {
