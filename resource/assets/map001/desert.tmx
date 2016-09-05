@@ -1611,11 +1611,11 @@
   </data>
  </layer>
  <objectgroup name="SpritObj">
-  <object id="18" gid="49" x="608" y="736" width="128" height="124">
+  <object id="18" name="big_tree" gid="49" x="608" y="736" width="128" height="124">
    <properties>
     <property name="MissionId" type="int" value="25008"/>
    </properties>
   </object>
-  <object id="27" gid="49" x="576" y="672.5" width="96" height="93"/>
+  <object id="27" name="little_tree" gid="49" x="576" y="672.5" width="96" height="93"/>
  </objectgroup>
 </map>

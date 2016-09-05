@@ -50,10 +50,14 @@ module tiled {
 					var object: tiled.TMXObject = new tiled.TMXObject(this._childrens[i], this._orientaion, this._tilesets, this._z, this._color);
 					object.alpha = this._opacity;
 					this._objects[i] = object;
+					
 					this.addZChild(object);
 					this._objectHash[object.id] = object;
+
+					this.graphics.beginFill(0xff0000);
+					this.graphics.drawRect(object.x, object.y, 5, 5);
+					this.graphics.endFill();
 				}
-				this._objects[i]
 			}
 		}
 
@@ -61,26 +65,43 @@ module tiled {
 		 * 排序(z序)插入
 		 */
 		public addZChild(s: egret.Sprite) {
-			let my_z: number = (s.y + s.height) * this._tilesets.tilemap.tilewidth * this._tilesets.tilemap.cols + s.x + s.width;
+			//let my_z: number = (s.y + s.height) * this._tilesets.tilemap.tilewidth * this._tilesets.tilemap.cols + s.x + s.width;
+			let my_z: number = (s.y) * this._tilesets.tilemap.tilewidth * this._tilesets.tilemap.cols + s.x + s.width;
 
 			if (this.numChildren > 0) {
+				let contain: boolean = this.contains(s);
+
 				for (var a = 0; a < this.numChildren; a++) {
 					let val: egret.DisplayObject = this.getChildAt(a);
 					if (val != s) {
-						let z: number = (val.y + val.height) * this._tilesets.tilemap.tilewidth * this._tilesets.tilemap.cols + val.x + val.width;
+						//let z: number = (val.y + val.height) * this._tilesets.tilemap.tilewidth * this._tilesets.tilemap.cols + val.x + val.width;
+						let z: number = (val.y) * this._tilesets.tilemap.tilewidth * this._tilesets.tilemap.cols + val.x + val.width;
 						if (my_z < z) {
 							if (a > 0) {
-								this.addChildAt(s, a - 1);
+								if (contain) {
+									this.setChildIndex(s, a - 1);
+								} else {
+									this.addChildAt(s, a - 1);
+								}
 							} else {
-								this.addChildAt(s, 0);
+								if (contain) {
+									this.setChildIndex(s, 0);
+								} else {
+									this.addChildAt(s, 0);
+								}
 							}
 							return;
 						}
-					} else if ((a+1)>=this.numChildren) {
+					} else if ((a + 1) >= this.numChildren) {
 						return;
 					}
 				}
-				this.addChildAt(s, this.numChildren);
+
+				if (contain) {
+					this.setChildIndex(s, this.numChildren);
+				} else {
+					this.addChildAt(s, this.numChildren);
+				}
 			} else {
 				this.addChild(s);
 			}

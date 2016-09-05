@@ -37,6 +37,18 @@ var Actor = (function () {
         this.sprite = new egret.Sprite();
         var bmp = AssetManagerEx.createBitmapByName(g_ActorMdlMgr.GetMdl(mdlId).bodyImg);
         this.sprite.addChild(bmp);
+        this.sprite.anchorOffsetY += bmp.height;
+        // 外发光滤镜
+        var color = 0x33CCFF; /// 光晕的颜色，十六进制，不包含透明度
+        var alpha = 0.8; /// 光晕的颜色透明度，是对 color 参数的透明度设定。有效值为 0.0 到 1.0。例如，0.8 设置透明度值为 80%。
+        var blurX = 35; /// 水平模糊量。有效值为 0 到 255.0（浮点）
+        var blurY = 35; /// 垂直模糊量。有效值为 0 到 255.0（浮点）
+        var strength = 2; /// 压印的强度，值越大，压印的颜色越深，而且发光与背景之间的对比度也越强。有效值为 0 到 255。暂未实现
+        var quality = 3 /* HIGH */; /// 应用滤镜的次数，建议用 BitmapFilterQuality 类的常量来体现
+        var inner = false; /// 指定发光是否为内侧发光，暂未实现
+        var knockout = false; /// 指定对象是否具有挖空效果，暂未实现
+        var glowFilter = new egret.GlowFilter(color, alpha, blurX, blurY, strength, quality, inner, knockout);
+        bmp.filters = [glowFilter];
         // this.sprite.graphics.beginFill(0xff0000);
         // this.sprite.graphics.drawRect(0, 0, 100, 100);
         // this.sprite.graphics.endFill();
@@ -65,26 +77,29 @@ var Actor = (function () {
     p.SetPos = function (x, y) {
         this.pos.x = x;
         this.pos.y = y;
-        this.sprite.x = x - this.sprite.width / 2;
-        this.sprite.y = y - this.sprite.height / 2;
+        this.sprite.x = x;
+        this.sprite.y = y;
         var group = this.constainer;
         if (group != undefined) {
             group.addZChild(this.sprite);
+            group.graphics.beginFill(0xff0000);
+            group.graphics.drawRect(this.sprite.x, this.sprite.y, 5, 5);
+            group.graphics.endFill();
         }
     };
     p.Move = function (keyCode) {
         switch (keyCode) {
             case 37:
-                this.SetPos(this.pos.x - 20, this.pos.y);
+                this.SetPos(this.pos.x - 32, this.pos.y);
                 break;
             case 38:
-                this.SetPos(this.pos.x, this.pos.y - 20);
+                this.SetPos(this.pos.x, this.pos.y - 32);
                 break;
             case 39:
-                this.SetPos(this.pos.x + 20, this.pos.y);
+                this.SetPos(this.pos.x + 32, this.pos.y);
                 break;
             case 40:
-                this.SetPos(this.pos.x, this.pos.y + 20);
+                this.SetPos(this.pos.x, this.pos.y + 32);
                 break;
         }
         // keycode   37 = Left

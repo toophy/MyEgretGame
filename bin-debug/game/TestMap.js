@@ -45,27 +45,27 @@ var DesertExample = (function (_super) {
                 self.dragBegin_x = evt.localX;
                 self.dragBegin_y = evt.localY;
             }, self);
+            self.createGameScene();
         }, url);
         urlLoader.load(new egret.URLRequest(url));
     }
     var d = __define,c=DesertExample,p=c.prototype;
-    p.addZChild = function (g, s) {
-        var my_z = s.y * this.tmxTileMap.tilewidth * this.tmxTileMap.cols + s.x;
-        if (g.numChildren > 0) {
-            for (var a = 0; a < g.numChildren; a++) {
-                var val = g.getChildAt(a);
-                if (val != s) {
-                    var z = val.y * this.tmxTileMap.tilewidth * this.tmxTileMap.cols + val.x;
-                    if (my_z < z) {
-                        g.setChildIndex(s, a);
-                        break;
-                    }
-                }
-            }
-        }
-        else {
-            g.setChildIndex(s, 0);
-        }
+    p.createGameScene = function () {
+        var dragonbonesData = RES.getRes("Robot_json");
+        var textureData = RES.getRes("texture_json");
+        var texture = RES.getRes("texture_png");
+        var dragonbonesFactory = new dragonBones.EgretFactory();
+        dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(dragonbonesData));
+        dragonbonesFactory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+        var armature = dragonbonesFactory.buildArmature("robot");
+        this.addChild(armature.display);
+        armature.display.x = 200;
+        armature.display.y = 300;
+        armature.display.scaleX = 0.2;
+        armature.display.scaleY = 0.2;
+        dragonBones.WorldClock.clock.add(armature);
+        armature.animation.gotoAndPlay("Run");
+        egret.Ticker.getInstance().register(function (frameTime) { dragonBones.WorldClock.clock.advanceTime(0.01); }, this);
     };
     return DesertExample;
 }(egret.DisplayObjectContainer));

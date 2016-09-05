@@ -8,27 +8,6 @@ class DesertExample extends egret.DisplayObjectContainer {
     private dragBegin_y: number;
     private _act: Actor;
 
-
-    public addZChild(g: tiled.TMXObjectGroup, s: egret.DisplayObject) {
-        let my_z: number = s.y * this.tmxTileMap.tilewidth * this.tmxTileMap.cols + s.x;
-
-        if (g.numChildren > 0) {
-            for (var a = 0; a < g.numChildren; a++) {
-                let val: egret.DisplayObject = g.getChildAt(a);
-                if (val != s) {
-                    let z: number = val.y * this.tmxTileMap.tilewidth * this.tmxTileMap.cols + val.x;
-                    if (my_z < z) {
-                        g.setChildIndex(s, a);
-                        break;
-                    }
-                }
-            }
-        } else {
-            g.setChildIndex(s, 0);
-        }
-    }
-
-
     public constructor() {
         super();
 
@@ -89,7 +68,32 @@ class DesertExample extends egret.DisplayObjectContainer {
 
             }, self);
 
+            self.createGameScene();
+
         }, url);
         urlLoader.load(new egret.URLRequest(url));
     }
+
+
+    createGameScene(): void {
+        var dragonbonesData = RES.getRes("Robot_json");
+        var textureData = RES.getRes("texture_json");
+        var texture = RES.getRes("texture_png");
+        var dragonbonesFactory: dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(dragonbonesData));
+        dragonbonesFactory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+        var armature: dragonBones.Armature = dragonbonesFactory.buildArmature("robot");
+        this.addChild(armature.display);
+        armature.display.x = 200;
+        armature.display.y = 300;
+        armature.display.scaleX = 0.15;
+        armature.display.scaleY = 0.15;
+        dragonBones.WorldClock.clock.add(armature);
+        armature.animation.gotoAndPlay("Run");
+        egret.Ticker.getInstance().register(
+            function (frameTime: number) { dragonBones.WorldClock.clock.advanceTime(0.01) },
+            this
+        );
+    }
+
 }
