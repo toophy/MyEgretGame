@@ -86,13 +86,12 @@ var Actor = (function () {
         if (move) {
             var tw = egret.Tween.get(this.sprite);
             var self_1 = this;
-            this.armature.animation.gotoAndPlay("Run", 0, 0, 0);
+            dragonBones.WorldClock.clock.add(this.armature);
+            this.armature.animation.gotoAndPlay("Run", 0, 0, 2);
+            egret.Ticker.getInstance().register(function (frameTime) { dragonBones.WorldClock.clock.advanceTime(0.01); }, this);
             tw.to({ x: dx, y: dy }, 500).call(function () {
                 self_1.pos.x = dx;
                 self_1.pos.y = dy;
-                //self.sprite.x = dx;
-                //self.sprite.y = dy;
-                console.log("x:", self_1.sprite.x);
             });
         }
         var group = this.constainer;

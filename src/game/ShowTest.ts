@@ -104,15 +104,17 @@ class Actor {
         if (move) {
             let tw = egret.Tween.get(this.sprite);
             let self: Actor = this;
-            this.armature.animation.gotoAndPlay("Run", 0, 0, 0);
-            self.sprite.x = dx;
-            self.sprite.y = dy;
-            // tw.to({ x: dx, y: dy }, 500).call(function () {
-            //     self.pos.x = dx;
-            //     self.pos.y = dy;
+            dragonBones.WorldClock.clock.add(this.armature);
+            this.armature.animation.gotoAndPlay("Run", 0, 0, 2);
+            egret.Ticker.getInstance().register(
+                function (frameTime: number) { dragonBones.WorldClock.clock.advanceTime(0.01) },
+                this
+            );
 
-            //     console.log("x:",self.sprite.x);
-            // });
+            tw.to({ x: dx, y: dy }, 500).call(function () {
+                self.pos.x = dx;
+                self.pos.y = dy;
+            });
         }
 
 

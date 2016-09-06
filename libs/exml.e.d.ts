@@ -1,3 +1,15 @@
+declare class AboutSkin extends eui.Skin{
+}
+declare class ChatSkin extends eui.Skin{
+}
+declare class HomeUISkin extends eui.Skin{
+}
+declare class ListItem extends eui.Skin{
+}
+declare class LoginSkin extends eui.Skin{
+}
+declare class NavbarSkin extends eui.Skin{
+}
 declare module skins{
 	class ButtonSkin extends eui.Skin{
 	}
@@ -49,16 +61,4 @@ declare module skins{
 declare module skins{
 	class VSliderSkin extends eui.Skin{
 	}
-}
-declare class AboutSkin extends eui.Skin{
-}
-declare class ChatSkin extends eui.Skin{
-}
-declare class HomeUISkin extends eui.Skin{
-}
-declare class ListItem extends eui.Skin{
-}
-declare class LoginSkin extends eui.Skin{
-}
-declare class NavbarSkin extends eui.Skin{
 }
