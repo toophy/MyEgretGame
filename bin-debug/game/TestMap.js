@@ -16,10 +16,10 @@ var DesertExample = (function (_super) {
             self.tmxTileMap.render();
             self.touchEnabled = true;
             self.addChild(self.tmxTileMap);
-            self._act = new Actor(7, 7);
+            self._act = new Actor();
             var lays = self.tmxTileMap.getLayers();
-            self._act.InitActor(lays[1], self.tmxTileMap);
-            self._act.SetPos(1, 1);
+            self._act.InitActor(1, 1, lays[1], self.tmxTileMap);
+            self._act.SetPos(1, 1, false);
             g_UIMgr.setFocusActor(self._act);
             self.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (evt) {
                 self.dragBegin_x = evt.localX;
@@ -45,7 +45,7 @@ var DesertExample = (function (_super) {
                 self.dragBegin_x = evt.localX;
                 self.dragBegin_y = evt.localY;
             }, self);
-            self.createGameScene();
+            // self.createGameScene();
         }, url);
         urlLoader.load(new egret.URLRequest(url));
     }
@@ -61,11 +61,26 @@ var DesertExample = (function (_super) {
         this.addChild(armature.display);
         armature.display.x = 200;
         armature.display.y = 300;
-        armature.display.scaleX = 0.2;
-        armature.display.scaleY = 0.2;
+        armature.display.scaleX = 0.5;
+        armature.display.scaleY = 0.5;
         dragonBones.WorldClock.clock.add(armature);
-        armature.animation.gotoAndPlay("Run");
+        armature.animation.gotoAndPlay("Standby", 0, 0, 0);
         egret.Ticker.getInstance().register(function (frameTime) { dragonBones.WorldClock.clock.advanceTime(0.01); }, this);
+    };
+    p.createGameScene2 = function () {
+        var dragonbonesData = RES.getRes("Robot_json");
+        var textureData = RES.getRes("texture_json");
+        var texture = RES.getRes("texture_png");
+        var dragonbonesFactory = new dragonBones.EgretFactory();
+        dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(dragonbonesData));
+        dragonbonesFactory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+        var armature = dragonbonesFactory.buildArmatureDisplay("robot");
+        this.addChild(armature);
+        armature.x = 200;
+        armature.y = 300;
+        armature.scaleX = 0.15;
+        armature.scaleY = 0.15;
+        armature.animation.play("Run", 0);
     };
     return DesertExample;
 }(egret.DisplayObjectContainer));

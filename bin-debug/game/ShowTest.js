@@ -2,26 +2,33 @@
  * 角色模板
  */
 var ActorMdl = (function () {
-    function ActorMdl(id, img) {
+    function ActorMdl(id, dragonbonesData, textureData, texture) {
         this.id = id;
-        this.bodyImg = img;
+        this.dragonbonesData = RES.getRes(dragonbonesData);
+        this.textureData = RES.getRes(textureData);
+        this.texture = RES.getRes(texture);
+        this.dragonbonesFactory = new dragonBones.EgretFactory();
+        this.dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(this.dragonbonesData));
+        this.dragonbonesFactory.addTextureAtlas(new dragonBones.EgretTextureAtlas(this.texture, this.textureData));
     }
     var d = __define,c=ActorMdl,p=c.prototype;
+    /**
+     * 获取Armature
+     */
+    p.getArmature = function (name) {
+        return this.dragonbonesFactory.buildArmature(name);
+    };
     return ActorMdl;
 }());
 egret.registerClass(ActorMdl,'ActorMdl');
 var ActorMdlMgr = (function () {
     function ActorMdlMgr() {
         this.actorMdls = new xstl.Dictionary();
-        this.actorMdls.setValue(1, new ActorMdl(1, "skillIcon01_png"));
-        this.actorMdls.setValue(2, new ActorMdl(2, "skillIcon02_png"));
-        this.actorMdls.setValue(3, new ActorMdl(3, "skillIcon03_png"));
-        this.actorMdls.setValue(4, new ActorMdl(4, "skillIcon04_png"));
-        this.actorMdls.setValue(5, new ActorMdl(5, "skillIcon05_png"));
-        this.actorMdls.setValue(6, new ActorMdl(6, "skillIcon06_png"));
-        this.actorMdls.setValue(7, new ActorMdl(7, "skillIcon07_png"));
     }
     var d = __define,c=ActorMdlMgr,p=c.prototype;
+    p.LoadAll = function () {
+        this.actorMdls.setValue(1, new ActorMdl(1, "Robot_json", "texture_json", "texture_png"));
+    };
     p.GetMdl = function (id) {
         return this.actorMdls.getValue(id);
     };
@@ -30,31 +37,32 @@ var ActorMdlMgr = (function () {
 egret.registerClass(ActorMdlMgr,'ActorMdlMgr');
 var g_ActorMdlMgr = new ActorMdlMgr();
 var Actor = (function () {
-    function Actor(id, mdlId) {
+    function Actor() {
+    }
+    var d = __define,c=Actor,p=c.prototype;
+    p.InitActor = function (id, mdlId, c, t) {
         this.id = id;
         this.mdlId = mdlId;
         this.pos = new egret.Point();
         this.sprite = new egret.Sprite();
-        var bmp = AssetManagerEx.createBitmapByName(g_ActorMdlMgr.GetMdl(mdlId).bodyImg);
-        this.sprite.addChild(bmp);
-        this.sprite.anchorOffsetY += bmp.height;
+        this.armature = g_ActorMdlMgr.GetMdl(mdlId).getArmature("robot");
+        this.sprite.addChild(this.armature.display);
+        //this.sprite.anchorOffsetY += this.armature.display.height;
         // 外发光滤镜
-        var color = 0x33CCFF; /// 光晕的颜色，十六进制，不包含透明度
-        var alpha = 0.8; /// 光晕的颜色透明度，是对 color 参数的透明度设定。有效值为 0.0 到 1.0。例如，0.8 设置透明度值为 80%。
-        var blurX = 35; /// 水平模糊量。有效值为 0 到 255.0（浮点）
-        var blurY = 35; /// 垂直模糊量。有效值为 0 到 255.0（浮点）
-        var strength = 2; /// 压印的强度，值越大，压印的颜色越深，而且发光与背景之间的对比度也越强。有效值为 0 到 255。暂未实现
-        var quality = 3 /* HIGH */; /// 应用滤镜的次数，建议用 BitmapFilterQuality 类的常量来体现
-        var inner = false; /// 指定发光是否为内侧发光，暂未实现
-        var knockout = false; /// 指定对象是否具有挖空效果，暂未实现
-        var glowFilter = new egret.GlowFilter(color, alpha, blurX, blurY, strength, quality, inner, knockout);
-        bmp.filters = [glowFilter];
+        // var color: number = 0x33CCFF;        /// 光晕的颜色，十六进制，不包含透明度
+        // var alpha: number = 0.8;             /// 光晕的颜色透明度，是对 color 参数的透明度设定。有效值为 0.0 到 1.0。例如，0.8 设置透明度值为 80%。
+        // var blurX: number = 35;              /// 水平模糊量。有效值为 0 到 255.0（浮点）
+        // var blurY: number = 35;              /// 垂直模糊量。有效值为 0 到 255.0（浮点）
+        // var strength: number = 2;            /// 压印的强度，值越大，压印的颜色越深，而且发光与背景之间的对比度也越强。有效值为 0 到 255。暂未实现
+        // var quality: number = egret.BitmapFilterQuality.HIGH;        /// 应用滤镜的次数，建议用 BitmapFilterQuality 类的常量来体现
+        // var inner: boolean = false;            /// 指定发光是否为内侧发光，暂未实现
+        // var knockout: boolean = false;            /// 指定对象是否具有挖空效果，暂未实现
+        // var glowFilter: egret.GlowFilter = new egret.GlowFilter(color, alpha, blurX, blurY,
+        //     strength, quality, inner, knockout);
+        // bmp.filters = [glowFilter];
         // this.sprite.graphics.beginFill(0xff0000);
         // this.sprite.graphics.drawRect(0, 0, 100, 100);
         // this.sprite.graphics.endFill();
-    }
-    var d = __define,c=Actor,p=c.prototype;
-    p.InitActor = function (c, t) {
         this.constainer = c;
         this._tilemap = t;
         // this.sprite.x = this.pos.x;
@@ -74,11 +82,19 @@ var Actor = (function () {
     d(p, "Sprite"
         ,function () { return this.sprite; }
     );
-    p.SetPos = function (x, y) {
-        this.pos.x = x;
-        this.pos.y = y;
-        this.sprite.x = x;
-        this.sprite.y = y;
+    p.SetPos = function (dx, dy, move) {
+        if (move) {
+            var tw = egret.Tween.get(this.sprite);
+            var self_1 = this;
+            this.armature.animation.gotoAndPlay("Run", 0, 0, 0);
+            tw.to({ x: dx, y: dy }, 500).call(function () {
+                self_1.pos.x = dx;
+                self_1.pos.y = dy;
+                //self.sprite.x = dx;
+                //self.sprite.y = dy;
+                console.log("x:", self_1.sprite.x);
+            });
+        }
         var group = this.constainer;
         if (group != undefined) {
             group.addZChild(this.sprite);
@@ -90,16 +106,16 @@ var Actor = (function () {
     p.Move = function (keyCode) {
         switch (keyCode) {
             case 37:
-                this.SetPos(this.pos.x - 32, this.pos.y);
+                this.SetPos(this.pos.x - 32, this.pos.y, true);
                 break;
             case 38:
-                this.SetPos(this.pos.x, this.pos.y - 32);
+                this.SetPos(this.pos.x, this.pos.y - 32, true);
                 break;
             case 39:
-                this.SetPos(this.pos.x + 32, this.pos.y);
+                this.SetPos(this.pos.x + 32, this.pos.y, true);
                 break;
             case 40:
-                this.SetPos(this.pos.x, this.pos.y + 32);
+                this.SetPos(this.pos.x, this.pos.y + 32, true);
                 break;
         }
         // keycode   37 = Left

@@ -28,13 +28,12 @@ class DesertExample extends egret.DisplayObjectContainer {
             self.touchEnabled = true;
             self.addChild(self.tmxTileMap);
 
-            self._act = new Actor(7, 7);
-
+            self._act = new Actor();
 
             let lays: tiled.TMXLayer[] = self.tmxTileMap.getLayers();
 
-            self._act.InitActor(lays[1], self.tmxTileMap);
-            self._act.SetPos(1, 1);
+            self._act.InitActor(1,1,lays[1], self.tmxTileMap);
+            self._act.SetPos(1, 1, false);
 
             g_UIMgr.setFocusActor(self._act);
 
@@ -68,7 +67,7 @@ class DesertExample extends egret.DisplayObjectContainer {
 
             }, self);
 
-            self.createGameScene();
+           // self.createGameScene();
 
         }, url);
         urlLoader.load(new egret.URLRequest(url));
@@ -79,21 +78,50 @@ class DesertExample extends egret.DisplayObjectContainer {
         var dragonbonesData = RES.getRes("Robot_json");
         var textureData = RES.getRes("texture_json");
         var texture = RES.getRes("texture_png");
+
         var dragonbonesFactory: dragonBones.EgretFactory = new dragonBones.EgretFactory();
         dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(dragonbonesData));
         dragonbonesFactory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+
         var armature: dragonBones.Armature = dragonbonesFactory.buildArmature("robot");
         this.addChild(armature.display);
+
         armature.display.x = 200;
         armature.display.y = 300;
-        armature.display.scaleX = 0.15;
-        armature.display.scaleY = 0.15;
+        armature.display.scaleX = 0.5;
+        armature.display.scaleY = 0.5;
+
         dragonBones.WorldClock.clock.add(armature);
-        armature.animation.gotoAndPlay("Run");
+
+        armature.animation.gotoAndPlay("Standby",0,0,0);
+
         egret.Ticker.getInstance().register(
             function (frameTime: number) { dragonBones.WorldClock.clock.advanceTime(0.01) },
             this
         );
+
+    }
+
+     createGameScene2(): void {
+        var dragonbonesData = RES.getRes("Robot_json");
+        var textureData = RES.getRes("texture_json");
+        var texture = RES.getRes("texture_png");
+
+        var dragonbonesFactory: dragonBones.EgretFactory = new dragonBones.EgretFactory();
+        dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(dragonbonesData));
+        dragonbonesFactory.addTextureAtlas(new dragonBones.EgretTextureAtlas(texture, textureData));
+
+        var armature: dragonBones.EgretArmatureDisplay = dragonbonesFactory.buildArmatureDisplay("robot");
+        this.addChild(armature);
+
+        armature.x = 200;
+        armature.y = 300;
+        armature.scaleX = 0.15;
+        armature.scaleY = 0.15;
+
+
+        armature.animation.play("Run",0);
+       
     }
 
 }

@@ -1,7 +1,6 @@
 {
    "compilerOptions": {
-      "target": "es5",
-      "locale": "zh-CN"
+      "target": "es5"
    },
    "exclude": [
       "node_modules"

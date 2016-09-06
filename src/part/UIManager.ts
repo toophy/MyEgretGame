@@ -70,6 +70,8 @@ class UIManagerEx extends egret.EventDispatcher {
      */
     protected startCreateScene(): void {
 
+        g_ActorMdlMgr.LoadAll();
+
         this._main.addChild(this._mapLayer);
         this._main.addChild(this._mapUILayer);
         this._main.addChild(this._euiLayer);
