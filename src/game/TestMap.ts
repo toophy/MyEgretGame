@@ -33,7 +33,7 @@ class DesertExample extends egret.DisplayObjectContainer {
             let lays: tiled.TMXLayer[] = self.tmxTileMap.getLayers();
 
             self._act.InitActor(1,1,lays[1], self.tmxTileMap);
-            self._act.SetPos(1, 1, false);
+            self._act.MoveTo(1, 1, false);
 
             g_UIMgr.setFocusActor(self._act);
 
@@ -66,6 +66,10 @@ class DesertExample extends egret.DisplayObjectContainer {
                 self.dragBegin_y = evt.localY;
 
             }, self);
+
+            self.addEventListener(egret.TouchEvent.TOUCH_TAP,(evt:egret.TouchEvent)=>{
+                g_UIMgr.getFocusActor().MoveTo(evt.$stageX,evt.stageY,true);
+            },self);
 
            // self.createGameScene();
 

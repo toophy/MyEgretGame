@@ -38,7 +38,7 @@ class ActorMdlMgr {
     }
 
     public LoadAll() {
-        this.actorMdls.setValue(1, new ActorMdl(1, "Robot_json", "texture_json", "texture_png"));
+        this.actorMdls.setValue(1, new ActorMdl(1, "robot_skeleton_json", "robot_texture_json", "robot_texture_png"));
     }
 
     public GetMdl(id: number): ActorMdl {
@@ -57,6 +57,9 @@ class Actor {
     private sprite: egret.Sprite;
     private constainer: egret.DisplayObjectContainer;
     private _tilemap: tiled.TMXTilemap;
+    private moveSpeed: number;
+    private moveSpeed1Pix: number;// 每1个距离用掉的毫秒 毫秒/1距离
+    private moving: boolean;// 移动中
 
     constructor() {
     }
@@ -66,8 +69,11 @@ class Actor {
         this.mdlId = mdlId;
         this.pos = new egret.Point();
         this.sprite = new egret.Sprite();
+        this.moveSpeed = 50;// 每秒速度
+        this.moveSpeed1Pix = 1000 / this.moveSpeed;
+        this.moving = false;
 
-        this.armature = g_ActorMdlMgr.GetMdl(mdlId).getArmature("robot");
+        this.armature = g_ActorMdlMgr.GetMdl(mdlId).getArmature("Robot");
         this.sprite.addChild(this.armature.display);
         //this.sprite.anchorOffsetY += this.armature.display.height;
 
@@ -94,62 +100,52 @@ class Actor {
         // this.sprite.y = this.pos.y;
         this.constainer.addChild(this.sprite);
         this.constainer.setChildIndex(this.sprite, 0);
+
+        this.moving = false;
+        if (this.armature.animation.lastAnimationName != "stop") {
+            this.armature.animation.gotoAndPlay("stop");
+        }
+        egret.Ticker.getInstance().register(
+            function (frameTime: number) { dragonBones.WorldClock.clock.advanceTime(frameTime * 0.001) },
+            this
+        );
     }
 
     public get Id(): number { return this.id; }
     public get MdlId(): number { return this.mdlId; }
     public get Pos(): egret.Point { return this.pos; }
     public get Sprite(): egret.Sprite { return this.sprite; }
-    public SetPos(dx: number, dy: number, move: boolean) {
+
+    isMoving(): boolean {
+        return this.moving;
+    }
+
+    public MoveTo(dx: number, dy: number, move: boolean) {
+
         if (move) {
-            let tw = egret.Tween.get(this.sprite);
-            let self: Actor = this;
-            dragonBones.WorldClock.clock.add(this.armature);
-            this.armature.animation.gotoAndPlay("Run", 0, 0, 2);
-            egret.Ticker.getInstance().register(
-                function (frameTime: number) { dragonBones.WorldClock.clock.advanceTime(0.01) },
-                this
-            );
+            if (!this.isMoving()) {
+                let space = Math.sqrt((this.pos.x - dx) * (this.pos.x - dx) + (this.pos.y - dy) * (this.pos.y - dy));
+                let useTime = space * this.moveSpeed1Pix;
 
-            tw.to({ x: dx, y: dy }, 500).call(function () {
-                self.pos.x = dx;
-                self.pos.y = dy;
-            });
-        }
+                let tw = egret.Tween.get(this.sprite);
+                let self: Actor = this;
+                dragonBones.WorldClock.clock.add(this.armature);
+                if (this.armature.animation.lastAnimationName != "run") {
+                    this.armature.animation.gotoAndPlay("run");
+                }
 
-
-        let group: tiled.TMXObjectGroup = <tiled.TMXObjectGroup>this.constainer;
-        if (group != undefined) {
-            group.addZChild(this.sprite);
-            group.graphics.beginFill(0xff0000);
-            group.graphics.drawRect(this.sprite.x, this.sprite.y, 5, 5);
-            group.graphics.endFill();
+                tw.to({ x: dx, y: dy }, useTime).call(function () {
+                    self.moving = false;
+                    if (self.armature.animation.lastAnimationName != "stop") {
+                        self.armature.animation.gotoAndPlay("stop");
+                    }
+                });
+            }
+        } else {
+            this.sprite.x = dx;
+            this.sprite.y = dy;
         }
     }
-    public Move(keyCode: number) {
-        switch (keyCode) {
-            case 37:
-                this.SetPos(this.pos.x - 32, this.pos.y, true);
-                break;
-
-            case 38:
-                this.SetPos(this.pos.x, this.pos.y - 32, true);
-                break;
-
-            case 39:
-                this.SetPos(this.pos.x + 32, this.pos.y, true);
-                break;
-
-            case 40:
-                this.SetPos(this.pos.x, this.pos.y + 32, true);
-                break;
-        }
-        // keycode   37 = Left
-        // keycode   38 = Up
-        // keycode   39 = Right
-        // keycode   40 = Down
-    }
-
 }
 
 
@@ -199,7 +195,7 @@ class TestA {
         //     //this.bird.x = evt.localX;
         //     //this.bird.y = evt.localY;
         //     //this._iAnimMode = (this._iAnimMode + 1) % 3;
-        //     this._act.SetPos(evt.localX, evt.localY);
+        //     this._act.MoveTo(evt.localX, evt.localY);
         // }, this);
 
         // this.launchAnimations();

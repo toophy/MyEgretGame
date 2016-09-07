@@ -27,7 +27,7 @@ var ActorMdlMgr = (function () {
     }
     var d = __define,c=ActorMdlMgr,p=c.prototype;
     p.LoadAll = function () {
-        this.actorMdls.setValue(1, new ActorMdl(1, "Robot_json", "texture_json", "texture_png"));
+        this.actorMdls.setValue(1, new ActorMdl(1, "robot_skeleton_json", "robot_texture_json", "robot_texture_png"));
     };
     p.GetMdl = function (id) {
         return this.actorMdls.getValue(id);
@@ -45,7 +45,10 @@ var Actor = (function () {
         this.mdlId = mdlId;
         this.pos = new egret.Point();
         this.sprite = new egret.Sprite();
-        this.armature = g_ActorMdlMgr.GetMdl(mdlId).getArmature("robot");
+        this.moveSpeed = 50; // 每秒速度
+        this.moveSpeed1Pix = 1000 / this.moveSpeed;
+        this.moving = false;
+        this.armature = g_ActorMdlMgr.GetMdl(mdlId).getArmature("Robot");
         this.sprite.addChild(this.armature.display);
         //this.sprite.anchorOffsetY += this.armature.display.height;
         // 外发光滤镜
@@ -69,6 +72,11 @@ var Actor = (function () {
         // this.sprite.y = this.pos.y;
         this.constainer.addChild(this.sprite);
         this.constainer.setChildIndex(this.sprite, 0);
+        this.moving = false;
+        if (this.armature.animation.lastAnimationName != "stop") {
+            this.armature.animation.gotoAndPlay("stop");
+        }
+        egret.Ticker.getInstance().register(function (frameTime) { dragonBones.WorldClock.clock.advanceTime(frameTime * 0.001); }, this);
     };
     d(p, "Id"
         ,function () { return this.id; }
@@ -82,45 +90,32 @@ var Actor = (function () {
     d(p, "Sprite"
         ,function () { return this.sprite; }
     );
-    p.SetPos = function (dx, dy, move) {
-        if (move) {
-            var tw = egret.Tween.get(this.sprite);
-            var self_1 = this;
-            dragonBones.WorldClock.clock.add(this.armature);
-            this.armature.animation.gotoAndPlay("Run", 0, 0, 2);
-            egret.Ticker.getInstance().register(function (frameTime) { dragonBones.WorldClock.clock.advanceTime(0.01); }, this);
-            tw.to({ x: dx, y: dy }, 500).call(function () {
-                self_1.pos.x = dx;
-                self_1.pos.y = dy;
-            });
-        }
-        var group = this.constainer;
-        if (group != undefined) {
-            group.addZChild(this.sprite);
-            group.graphics.beginFill(0xff0000);
-            group.graphics.drawRect(this.sprite.x, this.sprite.y, 5, 5);
-            group.graphics.endFill();
-        }
+    p.isMoving = function () {
+        return this.moving;
     };
-    p.Move = function (keyCode) {
-        switch (keyCode) {
-            case 37:
-                this.SetPos(this.pos.x - 32, this.pos.y, true);
-                break;
-            case 38:
-                this.SetPos(this.pos.x, this.pos.y - 32, true);
-                break;
-            case 39:
-                this.SetPos(this.pos.x + 32, this.pos.y, true);
-                break;
-            case 40:
-                this.SetPos(this.pos.x, this.pos.y + 32, true);
-                break;
+    p.MoveTo = function (dx, dy, move) {
+        if (move) {
+            if (!this.isMoving()) {
+                var space = Math.sqrt((this.pos.x - dx) * (this.pos.x - dx) + (this.pos.y - dy) * (this.pos.y - dy));
+                var useTime = space * this.moveSpeed1Pix;
+                var tw = egret.Tween.get(this.sprite);
+                var self_1 = this;
+                dragonBones.WorldClock.clock.add(this.armature);
+                if (this.armature.animation.lastAnimationName != "run") {
+                    this.armature.animation.gotoAndPlay("run");
+                }
+                tw.to({ x: dx, y: dy }, useTime).call(function () {
+                    self_1.moving = false;
+                    if (self_1.armature.animation.lastAnimationName != "stop") {
+                        self_1.armature.animation.gotoAndPlay("stop");
+                    }
+                });
+            }
         }
-        // keycode   37 = Left
-        // keycode   38 = Up
-        // keycode   39 = Right
-        // keycode   40 = Down
+        else {
+            this.sprite.x = dx;
+            this.sprite.y = dy;
+        }
     };
     return Actor;
 }());
@@ -146,7 +141,7 @@ var TestA = (function () {
         //     //this.bird.x = evt.localX;
         //     //this.bird.y = evt.localY;
         //     //this._iAnimMode = (this._iAnimMode + 1) % 3;
-        //     this._act.SetPos(evt.localX, evt.localY);
+        //     this._act.MoveTo(evt.localX, evt.localY);
         // }, this);
         // this.launchAnimations();
         var capabilites = [

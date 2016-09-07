@@ -26,16 +26,13 @@ var UIManagerEx = (function (_super) {
      * PC键盘按键事件
      */
     p.onKeyEvent = function (event) {
-        switch (event.keyCode) {
-            case 37:
-            case 38:
-            case 39:
-            case 40:
-                if (this._focusActor != undefined) {
-                    this._focusActor.Move(event.keyCode);
-                }
-                break;
-        }
+        // switch(event.keyCode){
+        //     case 37:
+        //     case 38:
+        //     case 39:
+        //     case 40:
+        //     break;
+        // }
     };
     /**
      * 设置焦点演员

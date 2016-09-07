@@ -19,7 +19,7 @@ var DesertExample = (function (_super) {
             self._act = new Actor();
             var lays = self.tmxTileMap.getLayers();
             self._act.InitActor(1, 1, lays[1], self.tmxTileMap);
-            self._act.SetPos(1, 1, false);
+            self._act.MoveTo(1, 1, false);
             g_UIMgr.setFocusActor(self._act);
             self.addEventListener(egret.TouchEvent.TOUCH_BEGIN, function (evt) {
                 self.dragBegin_x = evt.localX;
@@ -44,6 +44,9 @@ var DesertExample = (function (_super) {
                 }
                 self.dragBegin_x = evt.localX;
                 self.dragBegin_y = evt.localY;
+            }, self);
+            self.addEventListener(egret.TouchEvent.TOUCH_TAP, function (evt) {
+                g_UIMgr.getFocusActor().MoveTo(evt.$stageX, evt.stageY, true);
             }, self);
             // self.createGameScene();
         }, url);

@@ -38,16 +38,13 @@ class UIManagerEx extends egret.EventDispatcher {
      * PC键盘按键事件
      */
     onKeyEvent(event: KeyboardEvent) {
-        switch(event.keyCode){
-            case 37:
-            case 38:
-            case 39:
-            case 40:
-            if (this._focusActor!=undefined){
-                this._focusActor.Move(event.keyCode);
-            }
-            break;
-        }
+        // switch(event.keyCode){
+        //     case 37:
+        //     case 38:
+        //     case 39:
+        //     case 40:
+        //     break;
+        // }
     }
 
     /**
