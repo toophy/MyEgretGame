@@ -9,6 +9,7 @@ class UIManagerEx extends egret.EventDispatcher {
     private _euiLayer: eui.UILayer;
     private _webLayer: eui.UILayer;
     private _dlgs: xstl.Dictionary<string, any>;
+    private _focusActor: Actor;
 
     constructor(m: Main) {
         super();
@@ -26,6 +27,38 @@ class UIManagerEx extends egret.EventDispatcher {
         this.addEventListener(GameEvents.Evt_ShowDialog, this.onShowDialog, this);
 
         this.startCreateScene();
+
+        var that = this;
+        document.addEventListener("keydown", (event: KeyboardEvent) => {
+            that.onKeyEvent(event);
+        });
+    }
+
+    /**
+     * PC键盘按键事件
+     */
+    onKeyEvent(event: KeyboardEvent) {
+        // switch(event.keyCode){
+        //     case 37:
+        //     case 38:
+        //     case 39:
+        //     case 40:
+        //     break;
+        // }
+    }
+
+    /**
+     * 设置焦点演员
+     */
+    setFocusActor(a: Actor) {
+        this._focusActor = a;
+    }
+
+    /**
+     * 获取焦点演员
+     */
+    getFocusActor(): Actor {
+        return this._focusActor;
     }
 
     /**
@@ -34,11 +67,13 @@ class UIManagerEx extends egret.EventDispatcher {
      */
     protected startCreateScene(): void {
 
+        g_ActorMdlMgr.LoadAll();
+
         this._main.addChild(this._mapLayer);
         this._main.addChild(this._mapUILayer);
         this._main.addChild(this._euiLayer);
         this._main.addChild(this._webLayer);
-        
+
         var desert: DesertExample = new DesertExample();
         this._mapLayer.addChild(desert);
 

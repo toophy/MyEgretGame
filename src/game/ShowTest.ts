@@ -4,25 +4,41 @@
  */
 class ActorMdl {
     public id: number;
-    public bodyImg: string;
-    constructor(id: number, img: string) {
+    private dragonbonesData;
+    private textureData;
+    private texture;
+    private dragonbonesFactory: dragonBones.EgretFactory;
+
+    constructor(id: number, dragonbonesData: string, textureData: string, texture: string) {
         this.id = id;
-        this.bodyImg = img;
+        this.dragonbonesData = RES.getRes(dragonbonesData);
+        this.textureData = RES.getRes(textureData);
+        this.texture = RES.getRes(texture);
+
+        this.dragonbonesFactory = new dragonBones.EgretFactory();
+        this.dragonbonesFactory.addDragonBonesData(dragonBones.DataParser.parseDragonBonesData(this.dragonbonesData));
+        this.dragonbonesFactory.addTextureAtlas(new dragonBones.EgretTextureAtlas(this.texture, this.textureData));
+    }
+
+    /**
+     * 获取Armature
+     */
+    getArmature(name: string): dragonBones.Armature {
+        return this.dragonbonesFactory.buildArmature(name);
     }
 }
+
+
 
 class ActorMdlMgr {
     private actorMdls: xstl.Dictionary<number, ActorMdl>;
 
     constructor() {
         this.actorMdls = new xstl.Dictionary<number, ActorMdl>();
-        this.actorMdls[1] = new ActorMdl(1, "skillIcon01_png");
-        this.actorMdls[2] = new ActorMdl(1, "skillIcon02_png");
-        this.actorMdls[3] = new ActorMdl(1, "skillIcon03_png");
-        this.actorMdls[4] = new ActorMdl(1, "skillIcon04_png");
-        this.actorMdls[5] = new ActorMdl(1, "skillIcon05_png");
-        this.actorMdls[6] = new ActorMdl(1, "skillIcon06_png");
-        this.actorMdls[7] = new ActorMdl(1, "skillIcon07_png");
+    }
+
+    public LoadAll() {
+        this.actorMdls.setValue(1, new ActorMdl(1, "robot_skeleton_json", "robot_texture_json", "robot_texture_png"));
     }
 
     public GetMdl(id: number): ActorMdl {
@@ -37,39 +53,111 @@ class Actor {
     private name: string;
     private mdlId: number;
     private pos: egret.Point;
+    private armature: dragonBones.Armature;
     private sprite: egret.Sprite;
     private constainer: egret.DisplayObjectContainer;
+    private _tilemap: tiled.TMXTilemap;
+    private moveSpeed: number;
+    private moveSpeed1Pix: number;// 每1个距离用掉的毫秒 毫秒/1距离
+    private moving: boolean;// 移动中
 
-    constructor(id: number, mdlId: number) {
+    constructor() {
+    }
+
+    public InitActor(id: number, mdlId: number, c: egret.DisplayObjectContainer, t: tiled.TMXTilemap) {
         this.id = id;
         this.mdlId = mdlId;
         this.pos = new egret.Point();
         this.sprite = new egret.Sprite();
+        this.moveSpeed = 50;// 每秒速度
+        this.moveSpeed1Pix = 1000 / this.moveSpeed;
+        this.moving = false;
 
-        this.sprite.graphics.beginFill(0xff0000);
-        this.sprite.graphics.drawRect(0, 0, 100, 100);
-        this.sprite.graphics.endFill();
-    }
+        this.armature = g_ActorMdlMgr.GetMdl(mdlId).getArmature("Robot");
+        this.sprite.addChild(this.armature.display);
+        //this.sprite.anchorOffsetY += this.armature.display.height;
 
-    public InitActor(c: egret.DisplayObjectContainer) {
+        // 外发光滤镜
+        // var color: number = 0x33CCFF;        /// 光晕的颜色，十六进制，不包含透明度
+        // var alpha: number = 0.8;             /// 光晕的颜色透明度，是对 color 参数的透明度设定。有效值为 0.0 到 1.0。例如，0.8 设置透明度值为 80%。
+        // var blurX: number = 35;              /// 水平模糊量。有效值为 0 到 255.0（浮点）
+        // var blurY: number = 35;              /// 垂直模糊量。有效值为 0 到 255.0（浮点）
+        // var strength: number = 2;            /// 压印的强度，值越大，压印的颜色越深，而且发光与背景之间的对比度也越强。有效值为 0 到 255。暂未实现
+        // var quality: number = egret.BitmapFilterQuality.HIGH;        /// 应用滤镜的次数，建议用 BitmapFilterQuality 类的常量来体现
+        // var inner: boolean = false;            /// 指定发光是否为内侧发光，暂未实现
+        // var knockout: boolean = false;            /// 指定对象是否具有挖空效果，暂未实现
+        // var glowFilter: egret.GlowFilter = new egret.GlowFilter(color, alpha, blurX, blurY,
+        //     strength, quality, inner, knockout);
+        // bmp.filters = [glowFilter];
+
+        // this.sprite.graphics.beginFill(0xff0000);
+        // this.sprite.graphics.drawRect(0, 0, 100, 100);
+        // this.sprite.graphics.endFill();
+
         this.constainer = c;
-        this.sprite.x = this.pos.x;
-        this.sprite.y = this.pos.y;
+        this._tilemap = t;
+        // this.sprite.x = this.pos.x;
+        // this.sprite.y = this.pos.y;
         this.constainer.addChild(this.sprite);
+        this.constainer.setChildIndex(this.sprite, 0);
+
+        this.moving = false;
+        if (this.armature.animation.lastAnimationName != "stop") {
+            this.armature.animation.gotoAndPlay("stop");
+        }
+        egret.Ticker.getInstance().register(
+            function (frameTime: number) { dragonBones.WorldClock.clock.advanceTime(frameTime * 0.001) },
+            this
+        );
     }
 
     public get Id(): number { return this.id; }
     public get MdlId(): number { return this.mdlId; }
     public get Pos(): egret.Point { return this.pos; }
     public get Sprite(): egret.Sprite { return this.sprite; }
-    public SetPos(x: number, y: number) {
-        this.pos.x = x;
-        this.pos.y = y;
-        this.sprite.x = x - this.sprite.width / 2;
-        this.sprite.y = y - this.sprite.height / 2;
+
+    isMoving(): boolean {
+        return this.moving;
     }
 
+    public MoveTo(dx: number, dy: number, move: boolean) {
+
+        if (move) {
+            if (!this.isMoving()) {
+                let space = Math.sqrt((this.pos.x - dx) * (this.pos.x - dx) + (this.pos.y - dy) * (this.pos.y - dy));
+                let useTime = space * this.moveSpeed1Pix;
+
+                let tw = egret.Tween.get(this.sprite);
+                let self: Actor = this;
+                dragonBones.WorldClock.clock.add(this.armature);
+                if (this.armature.animation.lastAnimationName != "run") {
+                    this.armature.animation.gotoAndPlay("run");
+                }
+
+                tw.to({ x: dx, y: dy }, useTime).call(function () {
+                    self.moving = false;
+                    if (self.armature.animation.lastAnimationName != "stop") {
+                        self.armature.animation.gotoAndPlay("stop");
+                    }
+                });
+            }
+        } else {
+            this.sprite.x = dx;
+            this.sprite.y = dy;
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 /**
  * 最基本的显示
@@ -83,37 +171,34 @@ class TestA {
 
     private _iAnimMode: number;
     private _nScaleBase: number;
-    private bird: egret.Bitmap;
-    private _act: Actor;
+    // private bird: egret.Bitmap;
+
 
 
     constructor(m: eui.UILayer) {
         this._main = m;
 
-        this.bird = AssetManagerEx.createBitmapByName("skillIcon07_png");
-        this.bird.x = 0;
-        this.bird.y = 0;
-        this._main.addChild(this.bird);
+        // this.bird = AssetManagerEx.createBitmapByName("skillIcon07_png");
+        // this.bird.x = 0;
+        // this.bird.y = 0;
+        // this._main.addChild(this.bird);
 
         /// 为定位设置基准点(即锚点)
-        this.bird.anchorOffsetX = this.bird.width / 2;
-        this.bird.anchorOffsetY = this.bird.height / 2;
-        this.bird.x = this._main.stage.stageWidth * 0.5;
-        this.bird.y = this._main.stage.stageHeight * 0.5;
+        // this.bird.anchorOffsetX = this.bird.width / 2;
+        // this.bird.anchorOffsetY = this.bird.height / 2;
+        // this.bird.x = this._main.stage.stageWidth * 0.5;
+        // this.bird.y = this._main.stage.stageHeight * 0.5;
 
         var back = new TestBackup(m, "轻触屏幕调整显示对象位置");
 
-        this._main.addEventListener(egret.TouchEvent.TOUCH_BEGIN, (evt: egret.TouchEvent) => {
-            this.bird.x = evt.localX;
-            this.bird.y = evt.localY;
-            this._iAnimMode = (this._iAnimMode + 1) % 3;
-            this._act.SetPos(evt.localX, evt.localY);
-        }, this);
+        // this._main.addEventListener(egret.TouchEvent.TOUCH_BEGIN, (evt: egret.TouchEvent) => {
+        //     //this.bird.x = evt.localX;
+        //     //this.bird.y = evt.localY;
+        //     //this._iAnimMode = (this._iAnimMode + 1) % 3;
+        //     this._act.MoveTo(evt.localX, evt.localY);
+        // }, this);
 
-        this.launchAnimations();
-
-        this._act = new Actor(7, 7);
-        this._act.InitActor(this._main);
+        // this.launchAnimations();
 
         var capabilites: Array<egret.ITextElement> = [
             { text: "移动设备: " + egret.Capabilities.isMobile + "n", style: { size: 17, "fontFamily": "楷体" } },
@@ -128,22 +213,22 @@ class TestA {
 
     private launchAnimations() {
 
-        this._iAnimMode = TestA.ANIM_ROT;
-        this._nScaleBase = 0;
+        // this._iAnimMode = TestA.ANIM_ROT;
+        // this._nScaleBase = 0;
 
-        this._main.addEventListener(egret.Event.ENTER_FRAME, (evt: egret.Event) => {
-            switch (this._iAnimMode) {
-                case TestA.ANIM_ROT:
-                    this.bird.rotation += TestA.STEP_ROT;
-                    break;
-                case TestA.ANIM_SCALE:
-                    this.bird.scaleX = this.bird.scaleY = 0.5 + 0.5 *
-                        Math.abs(Math.sin(this._nScaleBase += TestA.STEP_SCALE));
-                    break;
-            }
+        // this._main.addEventListener(egret.Event.ENTER_FRAME, (evt: egret.Event) => {
+        //     switch (this._iAnimMode) {
+        //         case TestA.ANIM_ROT:
+        //             this.bird.rotation += TestA.STEP_ROT;
+        //             break;
+        //         case TestA.ANIM_SCALE:
+        //             this.bird.scaleX = this.bird.scaleY = 0.5 + 0.5 *
+        //                 Math.abs(Math.sin(this._nScaleBase += TestA.STEP_SCALE));
+        //             break;
+        //     }
 
-            return false;
-        }, this)
+        //     return false;
+        // }, this)
     }
 
 }

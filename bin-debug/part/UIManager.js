@@ -16,13 +16,42 @@ var UIManagerEx = (function (_super) {
         this._webLayer.touchThrough = true;
         this.addEventListener(GameEvents.Evt_ShowDialog, this.onShowDialog, this);
         this.startCreateScene();
+        var that = this;
+        document.addEventListener("keydown", function (event) {
+            that.onKeyEvent(event);
+        });
     }
     var d = __define,c=UIManagerEx,p=c.prototype;
+    /**
+     * PC键盘按键事件
+     */
+    p.onKeyEvent = function (event) {
+        // switch(event.keyCode){
+        //     case 37:
+        //     case 38:
+        //     case 39:
+        //     case 40:
+        //     break;
+        // }
+    };
+    /**
+     * 设置焦点演员
+     */
+    p.setFocusActor = function (a) {
+        this._focusActor = a;
+    };
+    /**
+     * 获取焦点演员
+     */
+    p.getFocusActor = function () {
+        return this._focusActor;
+    };
     /**
      * 创建场景界面
      * Create scene interface
      */
     p.startCreateScene = function () {
+        g_ActorMdlMgr.LoadAll();
         this._main.addChild(this._mapLayer);
         this._main.addChild(this._mapUILayer);
         this._main.addChild(this._euiLayer);

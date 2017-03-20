@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" nextobjectid="1">
- <tileset firstgid="1" name="Desert" tilewidth="32" tileheight="32" spacing="1" margin="1">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" nextobjectid="28">
+ <tileset firstgid="1" name="Desert" tilewidth="32" tileheight="32" spacing="1" margin="1" tilecount="48" columns="8">
   <image source="tmw_desert_spacing.png" width="265" height="199"/>
+ </tileset>
+ <tileset firstgid="49" name="tree2" tilewidth="96" tileheight="93" tilecount="1" columns="1">
+  <image source="tree2.png" width="96" height="93"/>
  </tileset>
  <layer name="Ground" width="40" height="40">
   <data>
@@ -1607,4 +1610,12 @@
    <tile gid="30"/>
   </data>
  </layer>
+ <objectgroup name="SpritObj">
+  <object id="18" name="big_tree" gid="49" x="608" y="736" width="128" height="124">
+   <properties>
+    <property name="MissionId" type="int" value="25008"/>
+   </properties>
+  </object>
+  <object id="27" name="little_tree" gid="49" x="576" y="672.5" width="96" height="93"/>
+ </objectgroup>
 </map>
